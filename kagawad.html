@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barangay Management System – Kagawad</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+ <link rel="stylesheet" href="css/kagawad.css">
+</head>
+<body>
+
+
+<header>
+  <div class="header-left">
+    <div class="logo-circle"><img src="assets/Santa ANA logo - Edited - Edited.png" alt="Santa Ana logo"></div>
+    <div>
+      <div class="header-title">BARANGAY MANAGEMENT SYSTEM</div>
+      <div class="header-sub">Barangay Sta. Ana, Pateros</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="header-label">
+      <span class="hl hl-investigate">Blotter / Investigation</span>
+      <span class="hl hl-schedule">Blotter / My Schedule</span>
+    </span>
+    <a href="#" class="icon-btn"><i class="fa fa-bell"></i></a>
+    <a href="#" class="icon-btn"><i class="fa fa-circle-user"></i></a>
+  </div>
+</header>
+
+<div class="body-wrap">
+
+
+  <aside>
+    <nav>
+      <a href="#" class="nav-link"><i class="fa fa-table-cells-large"></i> Dashboard</a>
+      <a href="#" class="nav-link"><i class="fa fa-house"></i> Resident</a>
+      <a href="#" class="nav-link"><i class="fa fa-file-lines"></i> Certificate</a>
+
+      <a href="#investigate" class="nav-blotter">
+        <i class="fa fa-file-alt"></i>
+        <span style="flex:1">Blotter</span>
+      </a>
+      <div class="sub-nav">
+        <a href="#investigate" class="sub-investigate">Investigate</a>
+        <a href="#schedule"    class="sub-schedule">My Schedule</a>
+      </div>
+
+      <a href="#" class="nav-link"><i class="fa fa-list-check"></i> Financial</a>
+      <a href="#" class="nav-link"><i class="fa fa-bullhorn"></i> Announcement</a>
+      <a href="#" class="nav-link"><i class="fa fa-circle-user"></i> Account</a>
+      <a href="#" class="nav-link"><i class="fa fa-gear"></i> Settings</a>
+      <a href="#" class="nav-link"><i class="fa fa-right-from-bracket"></i> Logout</a>
+    </nav>
+  </aside>
+
+
+  <main>
+
+    <div class="view" id="investigate">
+      <div class="page-wrap">
+        <div class="card-wrap">
+          <div class="card-title">Blotter Records</div>
+          <div class="card-sub">Search, filter, and manage incident reports</div>
+
+          <div class="report-period">Report Period</div>
+
+          <div class="filter-bar">
+            <div class="search-wrap">
+              <i class="fa fa-search"></i>
+              <input type="text" placeholder="Search by ID, name, location..."/>
+            </div>
+            <select class="filter-select">
+              <option>All Status</option>
+              <option>Investigating</option>
+              <option>Pending</option>
+              <option>Resolved</option>
+            </select>
+            <select class="filter-select">
+              <option>All Types</option>
+              <option>Theft</option>
+              <option>Loss Item</option>
+              <option>Violence</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Incident ID</th>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Complainant</th>
+                  <th>Location</th>
+                  <th>Update by</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BLT-2026-0003</td>
+                  <td>April 30, 2026</td>
+                  <td>Theft</td>
+                  <td>Juan Delacruz</td>
+                  <td>Alley 11</td>
+                  <td>Staff 1 / Rumeo</td>
+                  <td><span class="badge badge-red">Investigating</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <a href="#modal-0003" class="act-btn act-edit"><i class="fa fa-pen-to-square"></i></a>
+                      <a href="#"           class="act-btn act-delete"><i class="fa fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BLT-2026-0004</td>
+                  <td>April 27, 2026</td>
+                  <td>Loss Item</td>
+                  <td>Juan Delacruz</td>
+                  <td>Alley 11</td>
+                  <td></td>
+                  <td><span class="badge badge-yellow">Pending</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <a href="#modal-0004" class="act-btn act-edit"><i class="fa fa-pen-to-square"></i></a>
+                      <a href="#"           class="act-btn act-delete"><i class="fa fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BLT-2026-0005</td>
+                  <td>April 30, 2026</td>
+                  <td>Violence</td>
+                  <td>Juan Delacruz</td>
+                  <td>Alley 11</td>
+                  <td>Staff 1 / Rumeo</td>
+                  <td><span class="badge badge-red">Investigating</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <a href="#modal-0005" class="act-btn act-edit"><i class="fa fa-pen-to-square"></i></a>
+                      <a href="#"           class="act-btn act-delete"><i class="fa fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="view" id="schedule">
+      <div class="page-wrap">
+        <div class="page-title">Schedule</div>
+
+        <div class="table-wrap" style="border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff;">
+          <table class="sched-table">
+            <thead>
+              <tr>
+                <th style="width:110px"></th>
+                <th>Blotter ID</th>
+                <th>Type Incident</th>
+                <th>Complainant</th>
+                <th>Respondent</th>
+                <th>Date &amp; Time</th>
+                <th>Location</th>
+                <th>Type of Action</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+              <tr>
+                <td class="date-cell today">Today</td>
+                <td>BLT-2026-0001</td>
+                <td>Pagnanakaw</td>
+                <td>Delacruz, Juan Antonio</td>
+                <td>Penduko, Filipe</td>
+                <td>April 30, 2026<br>10:00 AM</td>
+                <td>Barangay Hall</td>
+                <td>Mediator</td>
+              </tr>
+        
+              <tr>
+                <td class="date-cell today">Today</td>
+                <td>BLT-2026-0001</td>
+                <td>Pagnanakaw</td>
+                <td>Delacruz, Juan Antonio</td>
+                <td>Penduko, Filipe</td>
+                <td>April 30, 2026<br>2:00 PM</td>
+                <td>Alley 12 P Rosales St.</td>
+                <td>Investigating</td>
+              </tr>
+           
+              <tr>
+                <td class="date-cell tomorrow">Tomorrow</td>
+                <td>BLT-2026-0001</td>
+                <td>Pagnanakaw</td>
+                <td>Delacruz, Juan Antonio</td>
+                <td>Penduko, Filipe</td>
+                <td>May 1, 2026<br>2:00 PM</td>
+                <td>Session Hall</td>
+                <td>Mediator</td>
+              </tr>
+             
+              <tr>
+                <td class="date-cell future">May 22</td>
+                <td>BLT-2026-0001</td>
+                <td>Pagnanakaw</td>
+                <td>Delacruz, Juan Antonio</td>
+                <td>Penduko, Filipe</td>
+                <td>May 22, 2026<br>2:00 PM</td>
+                <td>Barangay Hall</td>
+                <td>Mediator</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>© 2026 Barangay Blotter</footer>
+
+
+<div class="modal-overlay" id="modal-0003">
+  <div class="modal">
+    <div class="modal-top">
+      <h3>Blotter Report</h3>
+      <a href="#investigate" class="modal-close">✕</a>
+    </div>
+    <div class="modal-body">
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>Incident ID</th><th>Date</th><th>Type</th>
+            <th>Complainant</th><th>Location</th><th>Action</th><th>Update by</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BLT-2026-0003</td>
+            <td>April 30, 2026</td>
+            <td>Theft</td>
+            <td>Juan Delacruz</td>
+            <td>Alley 11</td>
+            <td>
+              <div class="badge-stack">
+                <span class="badge badge-red">Investigating</span>
+                 <span class="badge badge-green">Resolved</span>
+              </div>
+            </td>
+            <td>Staff 1 / Rumeo</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="modal-section-label">Description</div>
+      <textarea class="modal-textarea" placeholder="Incident involving theft of personal belongings..."></textarea>
+
+      <div class="modal-section-label">Investigation Notes</div>
+      <textarea class="modal-textarea" placeholder="Add investigation findings, witness statements, evidence details, etc."></textarea>
+
+      <div class="modal-section-label">Attachments / Evidence</div>
+      <div class="drop-zone">
+        <span>Click to upload files or drag and drop</span>
+      </div>
+
+      <div class="modal-actions">
+        <a href="#investigate" class="btn btn-cancel">Cancel</a>
+        <a href="#investigate" class="btn btn-update">Update</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modal-0004">
+  <div class="modal">
+    <div class="modal-top">
+      <h3>Blotter Report</h3>
+      <a href="#investigate" class="modal-close">✕</a>
+    </div>
+    <div class="modal-body">
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>Incident ID</th><th>Date</th><th>Type</th>
+            <th>Complainant</th><th>Location</th><th>Action</th><th>Update by</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BLT-2026-0004</td>
+            <td>April 27, 2026</td>
+            <td>Loss Item</td>
+            <td>Juan Delacruz</td>
+            <td>Alley 11</td>
+            <td><span class="badge badge-yellow">Pending</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="modal-section-label">Description</div>
+      <textarea class="modal-textarea" placeholder="Incident involving lost personal item..."></textarea>
+
+      <div class="modal-section-label">Investigation Notes</div>
+      <textarea class="modal-textarea" placeholder="Add investigation findings, witness statements, evidence details, etc."></textarea>
+
+      <div class="modal-section-label">Attachments / Evidence</div>
+      <div class="drop-zone">
+        <span>Click to upload files or drag and drop</span>
+      </div>
+
+      <div class="modal-actions">
+        <a href="#investigate" class="btn btn-cancel">Cancel</a>
+        <a href="#investigate" class="btn btn-update">Update</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modal-0005">
+  <div class="modal">
+    <div class="modal-top">
+      <h3>Blotter Report</h3>
+      <a href="#investigate" class="modal-close">✕</a>
+    </div>
+    <div class="modal-body">
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>Incident ID</th><th>Date</th><th>Type</th>
+            <th>Complainant</th><th>Location</th><th>Action</th><th>Update by</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BLT-2026-0005</td>
+            <td>April 30, 2026</td>
+            <td>Violence</td>
+            <td>Juan Delacruz</td>
+            <td>Alley 11</td>
+            <td>
+              <div class="badge-stack">
+                <span class="badge badge-green">Resolved</span>
+                <span class="badge badge-yellow" style="background:#eab308">Investigating</span>
+              </div>
+            </td>
+            <td>Kagawad / Juan</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="modal-section-label">Description</div>
+      <textarea class="modal-textarea">Incident involving verbal altercation that escalated</textarea>
+
+      <div class="modal-section-label">Investigation Notes</div>
+      <textarea class="modal-textarea" placeholder="Add investigation findings, witness statements, evidence details, etc."></textarea>
+
+      <div class="modal-section-label">Attachments / Evidence</div>
+      <div class="drop-zone">
+        <span>Click to upload files or drag and drop</span>
+      </div>
+
+      <div class="modal-actions">
+        <a href="#investigate" class="btn btn-cancel">Cancel</a>
+        <a href="#investigate" class="btn btn-update">Update</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

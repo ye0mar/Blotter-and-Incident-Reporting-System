@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barangay Management System</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="css/Dashboard.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+</head>
+<body>
+
+    <!-- ======== HEADER ======== -->
+    <div class="header">
+        <div class="header-left">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+            <!-- Logo: uses your local image -->
+            <img class="logo-img" src="images/barangay logo.jpg" alt="Barangay Logo" />
+            <div class="header-title">
+                <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+                <p>Barangay Sta. Ana, Pateros</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="breadcrumb">Blotter / Dashboard</span>
+            <div class="header-icons">
+               <button class="icon-btn">
+                    <i class="fa fa-bell"></i>
+                </button>
+                <button class="icon-btn">
+                    <i class="fa fa-circle-user"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======== SIDEBAR OVERLAY ======== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ======== BODY LAYOUT ======== -->
+    <div class="layout">
+
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                Dashboard
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Resident
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg>
+                Certificate
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Blotter
+            </div>
+            <div class="submenu">
+                <div class="sub-item" style="font-weight:600;color:#0d3461;">Dashboard</div>
+                <div class="sub-item"><a href="Create Report.html">Create Report</a></div>
+                <div class="sub-item"><a href="All Incident.html">All Incident</a></div>
+                <div class="sub-item"><a href="Schedules.html">Schedules</a></div>
+            </div>
+            <div class="nav-divider"></div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Financial
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                    <line x1="6" y1="1" x2="6" y2="4" />
+                    <line x1="10" y1="1" x2="10" y2="4" />
+                    <line x1="14" y1="1" x2="14" y2="4" />
+                </svg>
+                Announcement
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Account
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2" />
+                </svg>
+                Settings
+            </div>
+            <div class="nav-divider"></div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Logout
+            </div>
+        </div>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main">
+
+            <!-- STAT CARDS -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">Active Investigations</div>
+                        <div class="stat-val orange">0</div>
+                    </div>
+                    <div class="stat-icon">🔍</div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">Scheduled Hearings</div>
+                        <div class="stat-val teal">0</div>
+                    </div>
+                    <div class="stat-icon">📅</div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">New Reports</div>
+                        <div class="stat-val pink">0</div>
+                    </div>
+                    <div class="stat-icon">📋</div>
+                </div>
+            </div>
+
+            <!-- VIEW INCIDENT REPORTS -->
+            <div class="section-box">
+                <div class="section-header">VIEW INCIDENT REPORTS</div>
+                <div class="filters-row">
+                    <!-- Updated Date Range: No emoji, clean native picker -->
+                    <div class="filter-group">
+                        <label>Date Range</label>
+                        <div class="date-wrap">
+                            <input class="filter-input" type="date" style="width:150px;" />
+                        </div>
+                    </div>
+                    <!-- Status Dropdown (Closed removed) -->
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <div class="dropdown-container" id="statusContainer">
+                            <div class="dropdown-trigger" id="statusTrigger">
+                                <span id="statusLabel">Pending</span>
+                                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:#888;flex-shrink:0;transition:transform 0.2s;">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </div>
+                            <div class="dropdown-menu" id="statusMenu">
+                                <div class="dropdown-option selected" data-value="Pending">Pending</div>
+                                <div class="dropdown-option" data-value="Investigation">Investigation</div>
+                                <div class="dropdown-option" data-value="Resolved">Resolved</div>
+                                <div class="dropdown-option" data-value="Closed">Closed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Location Search -->
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <div class="search-wrap">
+                            <input class="filter-input" type="text" placeholder="Search" style="width:180px;padding-right:28px;" />
+                            <span class="search-icon">🔍</span>
+                        </div>
+                    </div>
+                    <!-- Incident Type Options (Updated) -->
+                    <div class="filter-group">
+                        <label>Incident Type</label>
+                        <select class="filter-select" style="width:160px;">
+                            <option>All Types</option>
+                            <option>Physical Abuse</option>
+                            <option>Theft</option>
+                            <option>Domestic Violence</option>
+                            <option>Verbal Abuse</option>
+                            <option>Trespassing</option>
+                            <option>Vandalism</option>
+                            <option>Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="height:8px;"></div>
+
+                <!-- TWO COLUMN LAYOUT -->
+                <div class="two-col" style="padding:0 0 0 0;">
+                    <!-- MY SCHEDULE -->
+                    <div class="col-left">
+                        <div style="background:#0d3461;color:white;padding:11px 16px;font-size:13px;font-weight:700;letter-spacing:0.8px;">MY SCHEDULE</div>
+                        <div class="schedule-list">
+                            <div class="empty-state">
+                                <div class="empty-icon">📅</div>
+                                <p>No schedules yet.</p>
+                                <span>Hearings will appear here once scheduled by staff.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INCIDENT REPORTS TABLE -->
+                    <div class="col-right">
+                        <div style="background:#0d3461;color:white;padding:11px 16px;font-size:13px;font-weight:700;letter-spacing:0.8px;">REPORTS</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Incident ID</th>
+                                        <th>Complainant</th>
+                                        <th>Type</th>
+                                        <th>Involved Person</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:36px 12px;">
+                                            <div class="empty-state">
+                                                <div class="empty-icon">📄</div>
+                                                <p>No incident reports found.</p>
+                                                <span>Reports will appear here once submitted.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end main -->
+    </div><!-- end layout -->
+
+    <!-- ======== FOOTER ======== -->
+    <div class="footer">© 2025 Barangay Blotter</div>
+
+    <!-- Link to external JavaScript -->
+    <script src="js/Dashboard.js"></script>
+</body>
+</html>
