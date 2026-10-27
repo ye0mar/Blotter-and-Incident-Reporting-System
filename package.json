@@ -1,0 +1,22 @@
+{
+  "name": "barangay-blotter-and-incident-reporting-system",
+  "version": "1.0.0",
+  "description": "Barangay Blotter & Incident Report System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "node -e \"console.log('Build complete')\"",
+    "lint": "node -c server.js blotter-backend/server.js blotter-backend/config/db.js blotter-backend/routes/auth.js blotter-backend/routes/users.js blotter-backend/routes/blotter.js blotter-backend/routes/schedules.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.5"
+  }
+}

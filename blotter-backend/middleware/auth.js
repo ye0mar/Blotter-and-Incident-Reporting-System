@@ -7,7 +7,7 @@ const verifyToken = (req, res, next) => {
 
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : auth;
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = jwt.verify(token, process.env.JWT_SECRET || 'blotter-secret-jwt-key-2026');
     next();
   } catch {
     return res.status(401).json({ message: 'Invalid or expired token' });

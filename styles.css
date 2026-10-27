@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Poppins', 'Urbanist', 'Circular', 'GT Walsheim', 'Okta Neue', 'Century Gothic', -apple-system, sans-serif;
     background: #f1f3f6;
     color: #222;
     height: 100vh;
@@ -92,9 +92,10 @@ body {
 
 /* ===== LAYOUT ===== */
 .layout {
-    display: flex;
+    display: block;
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    width: 100%;
 }
 
 /* ===== SIDEBAR ===== */

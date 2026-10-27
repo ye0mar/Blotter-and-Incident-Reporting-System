@@ -37,8 +37,8 @@ router.get('/:id', isCaptain, async (req, res) => {
 // ── PUT /api/users/:id/status  — toggle active/inactive ──────
 router.put('/:id/status', isAdmin, async (req, res) => {
   const { status } = req.body;
-  if (!['active', 'inactive'].includes(status))
-    return res.status(400).json({ message: 'Status must be active or inactive' });
+  if (!['active', 'inactive', 'pending'].includes(status))
+    return res.status(400).json({ message: 'Status must be active, inactive, or pending' });
   try {
     await db.query('UPDATE users SET status = ? WHERE id = ?', [status, req.params.id]);
     await db.query('INSERT INTO activity_logs (user_id, action, details) VALUES (?,?,?)',

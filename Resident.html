@@ -3,413 +3,367 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barangay Management System</title>
+  <title>Resident Blotter Portal – Barangay Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/top-nav.css">
   <link rel="stylesheet" href="css/Resident.css">
-  
 </head>
 <body>
 
-
-<header>
-  <div class="header-left">
-    <div class="logo-circle"><img src="assets/Santa ANA logo - Edited - Edited.png" alt="Santa Ana Logo"></div>
-    <div>
-      <div class="header-title">BARANGAY MANAGEMENT SYSTEM</div>
-      <div class="header-sub">Barangay Sta. Ana, Pateros</div>
+<!-- Single Unified Top Navigation Bar (Image 1 Style) -->
+<nav class="top-header-navbar">
+  <div class="top-header-left">
+    <img class="top-header-logo" src="assets/Santa ANA logo - Edited - Edited.png" alt="Barangay Seal" />
+    <div class="top-header-title-box">
+      <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+      <p>Barangay Sta. Ana, Pateros — Resident Blotter Portal</p>
     </div>
   </div>
-  <div class="header-right">
-    <span class="header-label">
-      <span class="hl-default"></span>
-      <span class="hl-complaint">My compliant</span>
-      <span class="hl-schedule">Complaints Schedule</span>
-    </span>
-    <a href="#" class="icon-btn"><i class="fa fa-bell"></i></a>
-    <a href="#" class="icon-btn"><i class="fa fa-circle-user"></i></a>
+  <div class="top-header-nav-links">
+    <a href="#report" class="top-nav-link" id="navReport">Report Incident</a>
+    <a href="#my-complaints" class="top-nav-link" id="navComplaints">My Complaints</a>
+    <a href="#my-schedule" class="top-nav-link" id="navSchedule">My Schedule</a>
+    <a href="javascript:void(0)" onclick="openAccountModal()" class="top-nav-link" id="navProfile">Profile</a>
+    <a href="javascript:void(0)" onclick="handleLogout()" class="top-nav-link logout-link">Logout</a>
   </div>
-</header>
+</nav>
 
-<div class="body-wrap">
+<div class="main-content-wrap">
 
-  
-  <aside>
-    <nav>
-      <a href="#" class="nav-link"><i class="fa fa-table-cells-large"></i> Dashboard</a>
-      <a href="#" class="nav-link"><i class="fa fa-file-lines"></i> Certificate</a>
-
-      <a href="#home" class="nav-blotter">
-        <i class="fa fa-file-alt"></i>
-        <span style="flex:1">Blotter</span>
-        <span class="chevron"><i class="fa fa-chevron-down"></i></span>
-      </a>
-      <div class="sub-nav">
-        <a href="#my-complaints" class="sub-link-complaint">My complaint</a>
-        <a href="#my-schedule"   class="sub-link-schedule">My Schedule</a>
+  <!-- ===== VIEW 1: REPORT INCIDENT (Intro & Form) ===== -->
+  <div class="view" id="report">
+    <div class="hero">
+      <div class="hero-content">
+        <h2>Digital Blotter &amp; Incident Reporting</h2>
+        <p>A secure online platform for Barangay Sta. Ana residents to submit complaints, blotter entries, and request hearings.</p>
       </div>
-
-      <a href="#" class="nav-link"><i class="fa fa-list-check"></i> Transparency</a>
-      <a href="#" class="nav-link"><i class="fa fa-bullhorn"></i> Announcement</a>
-      <a href="#" class="nav-link"><i class="fa fa-circle-user"></i> Account</a>
-      <a href="#" class="nav-link"><i class="fa fa-right-from-bracket"></i> Logout</a>
-    </nav>
-    <div class="utilities">
-      <div class="util-title">Utilities</div>
-      <a href="#" class="nav-link"><i class="fa fa-phone"></i> Emergency Contact</a>
-      <a href="#" class="nav-link"><i class="fa fa-circle-info"></i> Help &amp; FAQ</a>
     </div>
-  </aside>
 
- 
-  <main>
-
-    
-    <div class="view" id="home">
-      <div class="hero">
-        <div class="hero-content">
-          <h2>Digital Blotter &amp; Incident Reporting</h2>
-          <p>A modern, Secure platform for Barangay Sta. Ana to report incident and for manage peace and order effectively.</p>
-        </div>
-      </div>
-
+    <div style="margin: 20px 0 28px;">
       <a href="#step1" class="report-btn">
-        Report an Incident &nbsp;<i class="fa fa-arrow-right"></i>
+        File an Incident Report &nbsp;<i class="fa fa-arrow-right"></i>
       </a>
+    </div>
 
-      <h3 class="section-title">How It Works</h3>
-      <p class="section-sub">Simple steps to report and track incidents</p>
+    <h3 class="section-title">How It Works</h3>
+    <p class="section-sub">Simple steps to report and track incidents in Barangay Sta. Ana</p>
 
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon"><i class="fa fa-file-lines"></i></div>
-          <div class="card-label">1. Submit Report</div>
-          <p class="card-desc">Fill out the online incident report form with details about what happened, when, and where.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon"><i class="fa fa-file-lines"></i></div>
+        <div class="card-label">1. Submit Report</div>
+        <p class="card-desc">Fill out the official blotter report form with incident details, respondent info, and date/location.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fa fa-shield"></i></div>
+        <div class="card-label">2. Official Review</div>
+        <p class="card-desc">Barangay officials and assigned Kagawad review the report and schedule mediation or investigation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fa fa-square-check"></i></div>
+        <div class="card-label">3. Resolution</div>
+        <p class="card-desc">Track updates and hearing dates in your schedule until an amicable settlement or official resolution is reached.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VIEW 2: MY COMPLAINTS ===== -->
+  <div class="view" id="my-complaints" style="display:none;">
+    <div class="page-wrap">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Complaints</div>
+          <div class="page-subtitle">View all submitted incident reports and blotter entries</div>
         </div>
-        <div class="card">
-          <div class="card-icon"><i class="fa fa-shield"></i></div>
-          <div class="card-label">2. Official Review</div>
-          <p class="card-desc">Barangay officials receive and review your report, assigning it for investigation.</p>
+        <a href="#step1" class="btn btn-primary"><i class="fa fa-plus"></i> New Report</a>
+      </div>
+
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <i class="fa fa-search"></i>
+          <input type="text" id="complaintSearch" placeholder="Search by ID, respondent, or type..." oninput="filterResidentComplaints()"/>
         </div>
-        <div class="card">
-          <div class="card-icon"><i class="fa fa-square-check"></i></div>
-          <div class="card-label">3. Resolution</div>
-          <p class="card-desc">Track the progress and receive updates until your case is resolved.</p>
+        <select class="filter-select" id="complaintTypeFilter" onchange="filterResidentComplaints()">
+          <option value="">All Types</option>
+          <option value="Pisikal na Pananakit">Pisikal na Pananakit</option>
+          <option value="Pagnanakaw">Pagnanakaw</option>
+          <option value="Theft">Theft</option>
+          <option value="Noise Complaint">Noise Complaint</option>
+        </select>
+        <select class="filter-select" id="complaintStatusFilter" onchange="filterResidentComplaints()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="investigating">Investigating</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Blotter ID</th>
+              <th>Incident Type</th>
+              <th>Date Reported</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="residentComplaintsTableBody">
+            <tr>
+              <td>BLT-2026-0001</td>
+              <td>Pisikal na Pananakit</td>
+              <td>April 20, 2026</td>
+              <td><span class="badge badge-yellow">Investigating</span></td>
+              <td><a href="#modal-0001" class="btn-outline"><i class="fa fa-circle-info"></i> View Details</a></td>
+            </tr>
+            <tr>
+              <td>BLT-2026-0002</td>
+              <td>Pagnanakaw</td>
+              <td>April 22, 2026</td>
+              <td><span class="badge badge-red">Pending</span></td>
+              <td><a href="#modal-0002" class="btn-outline"><i class="fa fa-circle-info"></i> View Details</a></td>
+            </tr>
+            <tr>
+              <td>BLT-2026-0003</td>
+              <td>Physical Injury</td>
+              <td>April 25, 2026</td>
+              <td><span class="badge badge-green">Resolved</span></td>
+              <td><a href="#modal-0001" class="btn-outline"><i class="fa fa-circle-info"></i> View Details</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VIEW 3: COMPLAINT SCHEDULE (Exact match to Image 1) ===== -->
+  <div class="view" id="my-schedule" style="display:none;">
+    <div class="page-wrap">
+      <div class="page-header" style="margin-bottom: 24px;">
+        <div>
+          <div class="page-title" style="font-size: 26px; font-weight: 700; color: #0f172a;">Complaint Schedule</div>
+          <div class="page-subtitle" style="font-size: 14px; color: #64748b; margin-top: 4px;">Schedule hearing dates</div>
+        </div>
+        <a href="#step1" class="btn btn-primary" style="background:#2563eb; color:#fff; padding:10px 22px; border-radius:8px; font-weight:600; display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
+          New Report <i class="fa fa-plus"></i>
+        </a>
+      </div>
+
+      <div class="table-wrap" style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid #e2e8f0; background:#ffffff;">
+              <th style="padding:16px 20px; text-align:left; font-size:14px; font-weight:700; color:#1e293b;">Blotter ID</th>
+              <th style="padding:16px 20px; text-align:left; font-size:14px; font-weight:700; color:#1e293b;">Incident Type</th>
+              <th style="padding:16px 20px; text-align:left; font-size:14px; font-weight:700; color:#1e293b;">Date and Time</th>
+              <th style="padding:16px 20px; text-align:left; font-size:14px; font-weight:700; color:#1e293b;">Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">BLT-2026-0001</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">Pisikal na Pananakit</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">May 2, 2026 &nbsp; 2:00PM</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">Barangay Hall Main Office</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">BLT-2026-0002</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">Pagnanakaw</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">May 3, 2026 &nbsp; 1:00PM</td>
+              <td style="padding:18px 20px; font-size:14px; color:#475569;">Barangay Hall Main Office</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REPORT INCIDENT MULTI-STEP FORM ===== -->
+  <div class="view" id="step1" style="display:none;">
+    <div class="step-bar">
+      <div class="step-item">
+        <div class="step-circle active">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="letterhead">
+        <div>Republic of the Philippines</div>
+        <div>National Capital Region</div>
+        <div>Municipality of Pateros</div>
+        <div>Barangay Sta. Ana</div>
+      </div>
+      <div class="form-row">
+        <div class="half-col">
+          <label class="field-label">Bilang ng blotter entry</label>
+          <input type="text" placeholder="Auto-generated upon submission" disabled/>
+        </div>
+        <div class="half-col">
+          <label class="field-label">Petsa at oras ng pag-uulat</label>
+          <input type="text" id="reportDateNow" placeholder="Petsa at oras ng pag-uulat" readonly/>
+        </div>
+      </div>
+      <div class="section-header">NAG-UULAT NA TAO (COMPLAINANT)</div>
+      <div class="form-row">
+        <div class="half-col">
+          <label class="field-label">Pangalan</label>
+          <input type="text" id="compName" placeholder="Buong Pangalan"/>
+        </div>
+        <div class="half-col">
+          <label class="field-label">Telepono</label>
+          <input type="tel" id="compPhone" placeholder="Numero ng cellphone o landline"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="full-col">
+          <label class="field-label">Tirahan</label>
+          <input type="text" id="compAddress" placeholder="Kumpletong address"/>
+        </div>
+        <div class="half-col">
+          <label class="field-label">Ugnayan sa Insidente</label>
+          <input type="text" id="compRelation" placeholder="Hal. Biktima, Saksi, Kamag-anak"/>
+        </div>
+      </div>
+      <div class="section-header">INAANGKIN NA NASASANGKOT (RESPONDENT)</div>
+      <div class="form-row">
+        <div class="half-col">
+          <label class="field-label">Pangalan ng Respondent</label>
+          <input type="text" id="respName" placeholder="Buong Pangalan ng inirereklamo"/>
+        </div>
+        <div class="half-col">
+          <label class="field-label">Telepono (kung alam)</label>
+          <input type="tel" id="respPhone" placeholder="Numero ng cellphone o landline"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div style="flex:1">
+          <label class="field-label">Tirahan ng Respondent</label>
+          <input type="text" id="respAddress" placeholder="Kumpletong address ng respondent" style="width:100%"/>
+        </div>
+      </div>
+      <div class="section-header">URI NG INSIDENTE</div>
+      <div class="check-grid">
+        <label class="check-label"><input type="radio" name="incType" value="Pisikal na Pananakit" checked/> Pisikal na Pananakit</label>
+        <label class="check-label"><input type="radio" name="incType" value="Pagnanakaw"/> Pagnanakaw</label>
+        <label class="check-label"><input type="radio" name="incType" value="Karahasang Domestiko"/> Karahasang Domestiko</label>
+        <label class="check-label"><input type="radio" name="incType" value="Panlalait o Paninira"/> Panlalait o Paninira</label>
+        <label class="check-label"><input type="radio" name="incType" value="Pagsalakay sa Ari-arian"/> Pagsalakay sa Ari-arian</label>
+        <label class="check-label"><input type="radio" name="incType" value="Paninira ng Ari-arian"/> Paninira ng Ari-arian</label>
+      </div>
+      <div class="form-actions">
+        <div></div>
+        <div class="right-btns">
+          <a href="#step2" class="btn btn-primary">SUSUNOD (STEP 2) <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="view" id="my-complaints">
-      <div class="page-wrap">
-        <div class="page-header">
-          <div>
-            <div class="page-title">My Complaints</div>
-            <div class="page-subtitle">View all incident reports</div>
-          </div>
-          <a href="#step1" class="btn btn-primary">New Report &nbsp;<i class="fa fa-plus"></i></a>
+  <div class="view" id="step2" style="display:none;">
+    <div class="step-bar">
+      <div class="step-item">
+        <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
+        <div class="step-line done"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle active">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="form-row">
+        <div style="flex:1">
+          <label class="field-label">Lugar ng Pangyayari:</label>
+          <input type="text" id="incLocation" placeholder="Ilagay kung saan nangyari ang insidente o eksaktong lugar"/>
         </div>
-
-        <div class="filter-bar">
-          <div class="search-wrap">
-            <i class="fa fa-search"></i>
-            <input type="text" placeholder="Search by ID"/>
-          </div>
-          <select class="filter-select">
-            <option>All Types</option>
-            <option>Pisikal na Pananakit</option>
-            <option>Pagnanakaw</option>
-            <option>Karahasang Domestiko</option>
-          </select>
-          <select class="filter-select">
-            <option>All Status</option>
-            <option>Investigating</option>
-            <option>Resolved</option>
-            <option>Pending</option>
-          </select>
+      </div>
+      <div class="form-row">
+        <div class="half-col">
+          <label class="field-label">Petsa at oras ng pangyayari:</label>
+          <input type="datetime-local" id="incDateTime"/>
         </div>
-
-        
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Blotter ID</th>
-                <th>Incident Type</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>BLT-2026-0001</td>
-                <td>Pisikal na Pananakit</td>
-                <td><span class="badge badge-red">Investigating</span></td>
-                <td><a href="#modal-0001" class="btn-outline"><i class="fa fa-circle-info"></i> View Details</a></td>
-              </tr>
-              <tr>
-                <td>BLT-2026-0002</td>
-                <td>Pagnanakaw</td>
-                <td><span class="badge badge-green">Resolved</span></td>
-                <td><a href="#modal-0002" class="btn-outline"><i class="fa fa-circle-info"></i> View Details</a></td>
-              </tr>
-            </tbody>
-          </table>
+      </div>
+      <div class="form-row">
+        <div style="flex:1">
+          <label class="field-label">Detalye ng Insidente:</label>
+          <textarea id="incDetails" placeholder="Ikwento nang buo ang nangyari"></textarea>
+        </div>
+      </div>
+      <div class="section-header">AKSYONG HINIHILING SA BARANGAY</div>
+      <div class="check-grid check-col">
+        <label class="check-label"><input type="checkbox" checked/> Iskedyul ng Mediasyon (Hearing)</label>
+        <label class="check-label"><input type="checkbox"/> Pagpapatawag sa Respondent</label>
+        <label class="check-label"><input type="checkbox"/> Pulisya Referral</label>
+      </div>
+      <div class="form-actions">
+        <div class="left-btns">
+          <a href="#step1" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Nakaraan</a>
+        </div>
+        <div class="right-btns">
+          <a href="#step3" class="btn btn-primary">Susunod (Step 3) <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
+  </div>
 
-    
-    <div class="view" id="my-schedule">
-      <div class="page-wrap">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Complaint Schedule</div>
-            <div class="page-subtitle">Schedule hearing dates</div>
-          </div>
-          <a href="#step1" class="btn btn-primary">New Report &nbsp;<i class="fa fa-plus"></i></a>
+  <div class="view" id="step3" style="display:none;">
+    <div class="step-bar">
+      <div class="step-item">
+        <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
+        <div class="step-line done"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
+        <div class="step-line done"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle active">3</div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="upload-block">
+        <div class="upload-block-title">Pirma ng Nag-uulat (Complainant Digital Signature):</div>
+        <div class="upload-block-sub">Ilagay ang iyong buong pangalan bilang digital confirmation:</div>
+        <input type="text" id="compSignature" placeholder="Ilagay ang Buong Pangalan" style="padding:10px 14px; border:1px solid #cbd5e1; border-radius:8px; width:100%; max-width:360px; font-size:14px;"/>
+      </div>
+      <div class="upload-block">
+        <div class="upload-block-title">Mga Kalakip na Dokumento/Ebidensya (Opsyonal)</div>
+        <div class="upload-block-sub">Mag-upload ng larawan, resibo, o dokumento (JPG, PNG, PDF)</div>
+        <input type="file" multiple style="margin-top:8px;"/>
+      </div>
+      <div class="form-actions">
+        <div class="left-btns">
+          <a href="#step2" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Nakaraan</a>
         </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Blotter ID</th>
-                <th>Incident Type</th>
-                <th>Date and Time</th>
-                <th>Location</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>BLT-2026-0001</td>
-                <td>Pisikal na Pananakit</td>
-                <td>May 2, 2026 &nbsp; 2:00PM</td>
-                <td>Barangay Hall Main Office</td>
-              </tr>
-              <tr>
-                <td>BLT-2026-0002</td>
-                <td>Pagnanakaw</td>
-                <td>May 3, 2026 &nbsp; 1:00PM</td>
-                <td>Barangay Hall Main Office</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="right-btns">
+          <a href="#my-complaints" class="btn btn-danger">Kanselahin</a>
+          <button type="button" onclick="submitResidentComplaint()" class="btn btn-success" style="padding:10px 24px; font-weight:700;">I-SUBMIT ANG REPORT</button>
         </div>
       </div>
     </div>
+  </div>
 
-
-    <div class="view" id="step1">
-      <div class="step-bar">
-        <div class="step-item">
-          <div class="step-circle active">1</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle">2</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle">3</div>
-        </div>
-      </div>
-      <div class="form-wrap">
-        <div class="letterhead">
-          <div>Republic of the Philippines</div>
-          <div>National Capital Region</div>
-          <div>Municipality of Pateros</div>
-          <div>Barangay Sta. Ana</div>
-        </div>
-        <div class="form-row">
-          <div class="half-col">
-            <label class="field-label">Bilang ng blotter entry</label>
-            <input type="text" placeholder="Auto-generated upon submission" disabled/>
-          </div>
-          <div class="half-col">
-            <label class="field-label">Petsa at oras ng pag-uulat</label>
-            <input type="text" placeholder="Petsa at oras ng pag-uulat"/>
-          </div>
-        </div>
-        <div class="section-header">NAG-UULAT NA TAO</div>
-        <div class="form-row">
-          <div class="half-col">
-            <label class="field-label">Pangalan</label>
-            <input type="text" placeholder="Buong Pangalan"/>
-          </div>
-          <div class="half-col">
-            <label class="field-label">Telepono</label>
-            <input type="tel" placeholder="Numero ng cellphone o landline"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="full-col">
-            <label class="field-label">Tirahan</label>
-            <input type="text" placeholder="Kumpletong address"/>
-          </div>
-          <div class="half-col">
-            <label class="field-label">Ugnayan sa Insidente</label>
-            <input type="text" placeholder="Hal. biktima, saksi, kamag-anak"/>
-          </div>
-        </div>
-        <div class="section-header">INAANGKIN NA NASASANGKOT (RESPONDENT)</div>
-        <div class="form-row">
-          <div class="half-col">
-            <label class="field-label">Pangalan</label>
-            <input type="text" placeholder="Buong Pangalan"/>
-          </div>
-          <div class="half-col">
-            <label class="field-label">Telepono</label>
-            <input type="tel" placeholder="Numero ng cellphone o landline"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div style="flex:1">
-            <label class="field-label">Tirahan</label>
-            <input type="text" placeholder="Kumpletong address" style="width:100%"/>
-          </div>
-        </div>
-        <div class="section-header">URI NG INSIDENTE</div>
-        <div class="check-grid">
-          <label class="check-label"><input type="checkbox"/> Pisikal na Pananakit</label>
-          <label class="check-label"><input type="checkbox"/> Pagnanakaw</label>
-          <label class="check-label"><input type="checkbox"/> Karahasang Domestiko</label>
-          <label class="check-label"><input type="checkbox"/> Panlalait o Paninira</label>
-          <label class="check-label"><input type="checkbox"/> Pagsalakay sa Ari-arian</label>
-          <label class="check-label"><input type="checkbox"/> Paninira ng Ari-arian</label>
-          <label class="check-label">
-            <input type="checkbox"/> iba pa
-            <input type="text" class="iba-input" placeholder="Ilagay dito"/>
-          </label>
-        </div>
-        <div class="form-actions">
-          <div class="left-btns"></div>
-          <div class="right-btns">
-            <a href="#step2" class="btn btn-primary">NEXT <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-
- 
-    <div class="view" id="step2">
-      <div class="step-bar">
-        <div class="step-item">
-          <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
-          <div class="step-line done"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle active">2</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle">3</div>
-        </div>
-      </div>
-      <div class="form-wrap">
-        <div class="form-row">
-          <div style="flex:1">
-            <label class="field-label">Lugar ng Pangyayari:</label>
-            <input type="text" placeholder="Ilagay kung saan ng yari ang insidente o eksaktong lugar"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="half-col">
-            <label class="field-label">Petsa at oras ng pangyayari:</label>
-            <input type="text" placeholder="Ilagay ang etsa at oras ng pangyayari"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div style="flex:1">
-            <label class="field-label">Detalye ng Insidente:</label>
-            <textarea placeholder="Ikwento nang buo ang nangyari"></textarea>
-          </div>
-        </div>
-        <div class="section-header">AKSYONG ISINAGAWA NG MGA OPISYAL NG BARANGAY</div>
-        <div class="check-grid check-col">
-          <label class="check-label"><input type="checkbox"/> Iskedyul ng Mediasyon</label>
-          <label class="check-label"><input type="checkbox"/> Inirefer sa Pulisya</label>
-          <label class="check-label"><input type="checkbox"/> Inirefer sa DSWD</label>
-          <label class="check-label"><input type="checkbox"/> Nagbigay ng Babala</label>
-          <label class="check-label">
-            <input type="checkbox"/> Iba pa:
-            <input type="text" class="iba-input" placeholder="Ilagay dito"/>
-          </label>
-        </div>
-        <div class="form-actions">
-          <div class="left-btns">
-            <a href="#step1" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Prev</a>
-          </div>
-          <div class="right-btns">
-            <a href="#step3" class="btn btn-primary">Next <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-
- 
-    <div class="view" id="step3">
-      <div class="step-bar">
-        <div class="step-item">
-          <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
-          <div class="step-line done"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle done"><i class="fa fa-check" style="font-size:11px"></i></div>
-          <div class="step-line done"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle active">3</div>
-        </div>
-      </div>
-      <div class="form-wrap">
-        <div class="official-section">
-          <div class="official-label">PANGALAN AT LAGDA NG OPISYAL NA TUMANGGAP NG ULAT:</div>
-          <div class="sig-box">
-            <svg width="160" height="80" viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15,62 Q25,18 48,48 Q58,63 68,28 Q78,8 100,38 Q116,54 128,33 Q138,22 152,18"
-                fill="none" stroke="#1e293b" stroke-width="2.2" stroke-linecap="round"/>
-            </svg>
-            <div class="sig-name">Juan Dela Cruz</div>
-          </div>
-        </div>
-        <div class="upload-block">
-          <div class="upload-block-title">LAGDA NG NAG-UULAT:</div>
-          <div class="upload-block-sub">Piliin ang File (Choose File button para mag-upload ng picture ng pirma)</div>
-          <div class="upload-row">
-            <input type="file" accept="image/*" style="max-width:300px"/>
-            <a href="#" class="btn btn-primary btn-sm">Idagdag ang Lagda</a>
-          </div>
-          <div class="upload-hint">I-click ang "Idagdag ang Lagda" para lumabas ang larawan ng pirma sa form</div>
-        </div>
-        <div class="upload-block">
-          <div class="upload-block-title">Mga Kalakip na Dokumento/Ebidensya</div>
-          <div class="upload-block-sub">Mag-upload ng anumang dokumento, larawan, video, o audio file bilang suporta (opsyonal)</div>
-          <div class="evidence-row">
-            <input type="file" multiple/>
-            <span style="color:var(--muted)"><i class="fa fa-upload"></i></span>
-          </div>
-          <div class="upload-hint">(Max 10MB each)</div>
-        </div>
-        <div class="form-actions">
-          <div class="left-btns">
-            <a href="#step2" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Prev</a>
-            <a href="#"      class="btn btn-gray btn-sm"><i class="fa fa-floppy-disk"></i></a>
-          </div>
-          <div class="right-btns">
-            <a href="#my-complaints" class="btn btn-danger">Cancel</a>
-            <a href="#my-complaints" class="btn btn-success">Submit</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
 </div>
 
-
+<!-- Modal 0001 Details -->
 <div class="modal-overlay" id="modal-0001">
   <div class="modal">
     <div class="modal-header">
-      <h3>Blotter Report</h3>
+      <h3>Blotter Report Details</h3>
       <a href="#my-complaints" class="modal-close">✕</a>
     </div>
     <div class="modal-body">
@@ -418,36 +372,38 @@
           <tr>
             <th>Blotter ID</th>
             <th>Complainant</th>
-            <th>Respondents</th>
+            <th>Respondent</th>
             <th>Incident Type</th>
-            <th>Location of Incident</th>
+            <th>Location</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>BLT-2026-0001</td>
-            <td>Juan Luna Dela Cruz</td>
-            <td>Jessie Santos</td>
-            <td>Pisikal na panakit</td>
-            <td>Alley 1 P Rosales St.</td>
+            <td>Juan Dela Cruz</td>
+            <td>Pedro Penduko</td>
+            <td>Pisikal na Pananakit</td>
+            <td>Alley 1 P. Rosales St.</td>
           </tr>
           <tr>
-            <th>Complainant Phone #</th>
+            <th>Complainant Contact</th>
             <th></th>
-            <th>Respondent Phone #</th>
+            <th>Respondent Contact</th>
             <th></th>
-            <th>Respondent Address</th>
+            <th>Status</th>
           </tr>
           <tr>
-            <td>09223151232</td>
+            <td>09123456786</td>
             <td></td>
-            <td>093215129741</td>
+            <td>09987654321</td>
             <td></td>
-            <td>Blk 1 Lot 33 Alley 2</td>
+            <td><span class="badge badge-yellow">Investigating</span></td>
           </tr>
           <tr class="desc-row">
             <td colspan="5">
-              <div class="modal-desc-box">Description</div>
+              <div class="modal-desc-box">
+                <strong>Description:</strong> Nagkaroon ng hindi pagkakaunawaan na nauwi sa pananakit. Naitakda ang unang pagdinig para sa posibleng pagkakasundo ng magkabilang panig.
+              </div>
             </td>
           </tr>
         </tbody>
@@ -456,11 +412,11 @@
   </div>
 </div>
 
-
+<!-- Modal 0002 Details -->
 <div class="modal-overlay" id="modal-0002">
   <div class="modal">
     <div class="modal-header">
-      <h3>Blotter Report</h3>
+      <h3>Blotter Report Details</h3>
       <a href="#my-complaints" class="modal-close">✕</a>
     </div>
     <div class="modal-body">
@@ -469,36 +425,38 @@
           <tr>
             <th>Blotter ID</th>
             <th>Complainant</th>
-            <th>Respondents</th>
+            <th>Respondent</th>
             <th>Incident Type</th>
-            <th>Location of Incident</th>
+            <th>Location</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>BLT-2026-0002</td>
+            <td>Juan Dela Cruz</td>
             <td>Maria Santos</td>
-            <td>Pedro Reyes</td>
             <td>Pagnanakaw</td>
-            <td>Blk 5 Lot 12 Sta. Ana</td>
+            <td>Alley II, Sta. Ana</td>
           </tr>
           <tr>
-            <th>Complainant Phone #</th>
+            <th>Complainant Contact</th>
             <th></th>
-            <th>Respondent Phone #</th>
+            <th>Respondent Contact</th>
             <th></th>
-            <th>Respondent Address</th>
+            <th>Status</th>
           </tr>
           <tr>
-            <td>09171234567</td>
+            <td>09123456786</td>
             <td></td>
-            <td>09281234567</td>
+            <td>09876543210</td>
             <td></td>
-            <td>Blk 3 Lot 7 Alley 4</td>
+            <td><span class="badge badge-red">Pending</span></td>
           </tr>
           <tr class="desc-row">
             <td colspan="5">
-              <div class="modal-desc-box">Description</div>
+              <div class="modal-desc-box">
+                <strong>Description:</strong> Iniulat na pagnanakaw ng personal na gamit sa harap ng tahanan. Kasalukuyang nirerepaso ng opisyal ng barangay.
+              </div>
             </td>
           </tr>
         </tbody>
@@ -509,5 +467,127 @@
 
 <footer>© 2026 Barangay Blotter</footer>
 
+<script src="js/api.js"></script>
+<script src="js/nav-account.js"></script>
+<script>
+  // Require login as resident
+  if (window.requireAuth) {
+    window.requireAuth(['resident', 'admin', 'captain', 'kagawad', 'staff']);
+  }
+
+  // Pre-fill complainant name if user session exists
+  const currentUser = window.api?.auth?.getUser();
+  if (currentUser) {
+    const compName = document.getElementById('compName');
+    const compPhone = document.getElementById('compPhone');
+    const compAddress = document.getElementById('compAddress');
+    if (compName && !compName.value) compName.value = currentUser.name || currentUser.full_name || '';
+    if (compPhone && !compPhone.value) compPhone.value = currentUser.phone || '';
+    if (compAddress && !compAddress.value) compAddress.value = currentUser.address || '';
+  }
+
+  const dateNowInput = document.getElementById('reportDateNow');
+  if (dateNowInput) {
+    dateNowInput.value = new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+  }
+
+  function handleResidentRouting() {
+    const hash = window.location.hash || '#my-schedule';
+    const views = ['report', 'my-complaints', 'my-schedule', 'step1', 'step2', 'step3'];
+
+    views.forEach(v => {
+      const el = document.getElementById(v);
+      if (el) el.style.display = 'none';
+    });
+
+    const navReport = document.getElementById('navReport');
+    const navComp = document.getElementById('navComplaints');
+    const navSched = document.getElementById('navSchedule');
+
+    if (navReport) navReport.classList.remove('active');
+    if (navComp) navComp.classList.remove('active');
+    if (navSched) navSched.classList.remove('active');
+
+    if (hash === '#report' || hash === '#step1' || hash === '#step2' || hash === '#step3') {
+      const targetId = hash.replace('#', '') || 'report';
+      const target = document.getElementById(targetId);
+      if (target) target.style.display = 'block';
+      if (navReport) navReport.classList.add('active');
+    } else if (hash === '#my-complaints') {
+      const target = document.getElementById('my-complaints');
+      if (target) target.style.display = 'block';
+      if (navComp) navComp.classList.add('active');
+    } else {
+      const target = document.getElementById('my-schedule');
+      if (target) target.style.display = 'block';
+      if (navSched) navSched.classList.add('active');
+    }
+  }
+
+  window.addEventListener('hashchange', handleResidentRouting);
+  window.addEventListener('DOMContentLoaded', handleResidentRouting);
+
+  async function submitResidentComplaint() {
+    const compName = document.getElementById('compName').value.trim();
+    const compPhone = document.getElementById('compPhone').value.trim();
+    const compAddress = document.getElementById('compAddress').value.trim();
+    const compRelation = document.getElementById('compRelation').value.trim();
+    const respName = document.getElementById('respName').value.trim();
+    const respPhone = document.getElementById('respPhone').value.trim();
+    const respAddress = document.getElementById('respAddress').value.trim();
+    const incLocation = document.getElementById('incLocation').value.trim();
+    const incDateTime = document.getElementById('incDateTime').value;
+    const incDetails = document.getElementById('incDetails').value.trim();
+    const compSignature = document.getElementById('compSignature').value.trim();
+
+    const selectedTypeEl = document.querySelector('input[name="incType"]:checked');
+    const incType = selectedTypeEl ? selectedTypeEl.value : 'General Incident';
+
+    if (!compName || !respName || !incDetails) {
+      alert('Pakipunan ang pangalan ng complainant, respondent, at detalye ng insidente.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('complainant_name', compName);
+      formData.append('complainant_phone', compPhone);
+      formData.append('complainant_address', compAddress);
+      formData.append('complainant_relation', compRelation || 'Biktima');
+      formData.append('respondent_name', respName);
+      formData.append('respondent_phone', respPhone);
+      formData.append('respondent_address', respAddress);
+      formData.append('incident_type', incType);
+      formData.append('incident_location', incLocation || 'Barangay Sta. Ana');
+      formData.append('incident_datetime', incDateTime || new Date().toISOString());
+      formData.append('incident_description', incDetails);
+      formData.append('complainant_signature', compSignature || compName);
+
+      if (window.api?.blotter?.submit) {
+        await window.api.blotter.submit(formData);
+      }
+
+      alert('Ang iyong blotter report ay matagumpay na naisumite! Maaari mo itong subaybayan sa My Complaints.');
+      window.location.hash = '#my-complaints';
+    } catch (err) {
+      alert('Error submitting report: ' + err.message);
+    }
+  }
+
+  function filterResidentComplaints() {
+    const q = (document.getElementById('complaintSearch')?.value || '').toLowerCase();
+    const type = (document.getElementById('complaintTypeFilter')?.value || '').toLowerCase();
+    const status = (document.getElementById('complaintStatusFilter')?.value || '').toLowerCase();
+
+    const rows = document.querySelectorAll('#residentComplaintsTableBody tr');
+    rows.forEach(row => {
+      const text = row.innerText.toLowerCase();
+      const matchQ = !q || text.includes(q);
+      const matchType = !type || text.includes(type);
+      const matchStatus = !status || text.includes(status);
+      row.style.display = (matchQ && matchType && matchStatus) ? '' : 'none';
+    });
+  }
+</script>
 </body>
 </html>

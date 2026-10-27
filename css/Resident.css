@@ -14,7 +14,7 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', 'Urbanist', 'Circular', 'GT Walsheim', 'Okta Neue', 'Century Gothic', -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -75,87 +75,17 @@
     }
     .icon-btn:hover { background: rgba(255,255,255,0.28); }
 
- 
     .body-wrap {
-      display: flex;
+      display: block;
       flex: 1;
-      height: calc(100vh - 72px);
-      overflow: hidden;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+      overflow-y: visible;
     }
 
- 
-    aside {
-      width: 240px;
-      background: #fff;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 16px 0;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-    nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
-
-    .nav-link {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: 8px;
-      text-decoration: none; font-size: 14px; color: var(--subtle);
-      transition: background .15s;
-    }
-    .nav-link:hover { background: #f8fafc; color: var(--text); }
-    .nav-link i { width: 20px; text-align: center; font-size: 16px; }
-
-
-    .nav-blotter {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: 8px;
-      text-decoration: none; font-size: 14px; color: var(--subtle);
-      transition: background .15s;
-    }
-    .nav-blotter i { width: 20px; text-align: center; font-size: 16px; }
-    .nav-blotter .chevron { margin-left: auto; font-size: 11px; color: #94a3b8; }
-    .nav-blotter:hover { background: #f8fafc; }
-
-
-    body:not(:has(:target)) .nav-blotter,
-    body:has(#home:target)           .nav-blotter,
-    body:has(#step1:target)          .nav-blotter,
-    body:has(#step2:target)          .nav-blotter,
-    body:has(#step3:target)          .nav-blotter,
-    body:has(#my-complaints:target)  .nav-blotter,
-    body:has(#my-schedule:target)    .nav-blotter,
-    body:has(#modal-0001:target)     .nav-blotter,
-    body:has(#modal-0002:target)     .nav-blotter {
-      background: var(--light-blue); color: var(--blue); font-weight: 600;
-    }
-
- 
-    .sub-nav { padding-left: 44px; display: flex; flex-direction: column; gap: 1px; margin-bottom: 4px; }
-    .sub-link {
-      padding: 7px 12px; font-size: 13px; color: #334155;
-      text-decoration: none; border-radius: 6px; display: block;
-    }
-    .sub-link:hover { background: #f1f5f9; }
-
-    .sub-link-complaint { padding: 7px 12px; font-size: 13px; color: #334155; text-decoration: none; border-radius: 6px; display: block; }
-    .sub-link-schedule  { padding: 7px 12px; font-size: 13px; color: #334155; text-decoration: none; border-radius: 6px; display: block; }
-    .sub-link-complaint:hover { background: #f1f5f9; }
-    .sub-link-schedule:hover  { background: #f1f5f9; }
-
-    body:has(#my-complaints:target) .sub-link-complaint,
-    body:has(#modal-0001:target)    .sub-link-complaint,
-    body:has(#modal-0002:target)    .sub-link-complaint {
-      background: #dbeafe; color: var(--blue); font-weight: 600;
-    }
-    body:has(#my-schedule:target) .sub-link-schedule {
-      background: #dbeafe; color: var(--blue); font-weight: 600;
-    }
-
-    .utilities { margin-top: auto; padding: 14px 12px 0; border-top: 1px solid var(--border); }
-    .util-title {
-      font-size: 11px; color: #94a3b8; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 1px; padding: 4px 14px 8px;
-    }
+    main { width: 100%; }
 
     
     main { flex: 1; overflow-y: auto; position: relative; }

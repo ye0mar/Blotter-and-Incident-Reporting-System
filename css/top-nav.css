@@ -1,0 +1,254 @@
+/* ============================================================
+   top-nav.css — Top Navigation Bar, Header & Account Styles
+   Typography strictly: Poppins, Urbanist, Circular, GT Walsheim, Okta Neue, Century Gothic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Urbanist:wght@400;500;600;700&display=swap');
+
+body, button, input, select, textarea {
+  font-family: 'Poppins', 'Urbanist', 'Circular', 'GT Walsheim', 'Okta Neue', 'Century Gothic', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* ===== SINGLE UNIFIED TOP NAVIGATION BAR (Exact match to Image 1) ===== */
+.top-header-navbar {
+  background: #0d3461;
+  color: #ffffff;
+  height: 72px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.top-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.top-header-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.top-header-title-box h1 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.top-header-title-box p {
+  font-size: 12px;
+  color: #cbd5e1;
+  opacity: 0.9;
+  margin-top: 2px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.top-header-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.top-nav-link {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  position: relative;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.top-nav-link:hover {
+  opacity: 0.85;
+}
+
+.top-nav-link.active {
+  font-weight: 700;
+  opacity: 1;
+}
+
+.top-nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.top-nav-link.logout-link {
+  color: #ffffff;
+  opacity: 0.95;
+}
+
+.top-nav-link.logout-link:hover {
+  color: #fca5a5;
+  opacity: 1;
+}
+
+.badge-counter {
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+/* Page content wrapper */
+.main-content-wrap {
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Footer */
+footer, .footer {
+  text-align: center;
+  padding: 20px 0 24px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Account Modal */
+.account-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.account-modal-box {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: modalSlideIn 0.25s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.account-modal-header {
+  background: #0d3461;
+  color: #ffffff;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #ffffff;
+}
+
+.account-modal-close {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.85;
+  line-height: 1;
+}
+
+.account-modal-close:hover {
+  opacity: 1;
+}
+
+.account-modal-body {
+  padding: 24px;
+}
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.account-info-item label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.account-info-item span {
+  font-size: 13px;
+  color: #0f172a;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .top-header-navbar {
+    height: auto;
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .top-header-nav-links {
+    width: 100%;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 4px;
+  }
+  .top-nav-link {
+    font-size: 14px;
+  }
+}

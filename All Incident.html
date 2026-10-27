@@ -5,132 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Barangay Management System</title>
     <link rel="stylesheet" href="css/All Incident.css" />
+    <link rel="stylesheet" href="css/top-nav.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
 </head>
 <body>
 
-    <!-- ======== HEADER ======== -->
-    <div class="header">
-        <div class="header-left">
-            <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
-            <img class="logo-img" src="images/barangay logo.jpg" alt="Barangay Logo" />
-            <div class="header-title">
+    <!-- Single Unified Top Navigation Bar (Image 1 Style) -->
+    <nav class="top-header-navbar">
+        <div class="top-header-left">
+            <img class="top-header-logo" src="assets/Santa ANA logo - Edited - Edited.png" alt="Barangay Seal" />
+            <div class="top-header-title-box">
                 <h1>BARANGAY MANAGEMENT SYSTEM</h1>
-                <p>Barangay Sta. Ana, Pateros</p>
+                <p>Barangay Sta. Ana, Pateros — Blotter Module</p>
             </div>
         </div>
-        <div class="header-right">
-            <span class="breadcrumb">Blotter / All incident</span>
-            <div class="header-icons">
-                <button class="icon-btn">
-                    <i class="fa fa-bell"></i>
-                </button>
-                <button class="icon-btn">
-                    <i class="fa fa-circle-user"></i>
-                </button>
-            </div>
+        <div class="top-header-nav-links">
+            <a href="All Incident.html" class="top-nav-link active">All Incidents</a>
+            <a href="Create Report.html" class="top-nav-link">Create Report</a>
+            <a href="Schedules.html" class="top-nav-link">My Schedule</a>
+            <a href="javascript:void(0)" onclick="openAccountModal()" class="top-nav-link">Account</a>
+            <a href="javascript:void(0)" onclick="handleLogout()" class="top-nav-link logout-link">Logout</a>
         </div>
-    </div>
-
-    <!-- ======== SIDEBAR OVERLAY ======== -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </nav>
 
     <!-- ======== BODY LAYOUT ======== -->
-    <div class="layout">
-
-        <!-- ===== SIDEBAR ===== -->
-        <div class="sidebar">
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 9 12 4 21 9" />
-                    <path d="M5 10v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
-                </svg>
-                Dashboard
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                Resident
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" y1="13" x2="8" y2="13" />
-                    <line x1="16" y1="17" x2="8" y2="17" />
-                </svg>
-                Certificate
-            </div>
-            <div class="nav-item active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" y1="13" x2="8" y2="13" />
-                    <line x1="16" y1="17" x2="8" y2="17" />
-                </svg>
-                Blotter
-            </div>
-            <div class="submenu">
-                <div class="sub-item"><a href="Dashboard.html">Dashboard</a></div>
-                <div class="sub-item"><a href="Create Report.html">Create Report</a></div>
-                <div class="sub-item"style="font-weight:600;color:#0d3461;"><a href="All Incident.html">All Incident</a></div>
-                <div class="sub-item"><a href="Schedules.html">Schedules</a></div>
-            </div>
-            <div class="nav-divider"></div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                Financial
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                    <line x1="6" y1="1" x2="6" y2="4" />
-                    <line x1="10" y1="1" x2="10" y2="4" />
-                    <line x1="14" y1="1" x2="14" y2="4" />
-                </svg>
-                Announcement
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-                Account
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2" />
-                </svg>
-                Settings
-            </div>
-            <div class="nav-divider"></div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Logout
-            </div>
-        </div>
-
-        <!-- ===== MAIN CONTENT ===== -->
-        <div class="main">
+    <div class="layout" style="display:block; max-width: 1400px; margin: 0 auto; width: 100%; padding: 20px 24px;">
+        <div class="main" style="width: 100%; padding: 0;">
 
             <!-- STAT CARDS -->
             <div class="stats-row">
@@ -335,6 +236,8 @@
         </div>
     </div>
 
+    <script src="js/api.js"></script>
+    <script src="js/nav-account.js"></script>
     <script src="js/All Incident.js"></script>
 </body>
 </html>

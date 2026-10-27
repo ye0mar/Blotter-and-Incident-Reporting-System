@@ -93,9 +93,10 @@ body {
 
 /* ===== LAYOUT ===== */
 .layout {
-    display: flex;
+    display: block;
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    width: 100%;
 }
 
 /* ===== SIDEBAR ===== */

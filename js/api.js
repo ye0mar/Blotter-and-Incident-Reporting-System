@@ -3,7 +3,7 @@
 //  Usage:  import { api, auth } from './api.js'  (or script tag)
 // ============================================================
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = '/api';
 
 // ── Token helpers ─────────────────────────────────────────────
 const getToken  = () => localStorage.getItem('token');
@@ -30,7 +30,10 @@ async function request(endpoint, options = {}) {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    if (res.status === 401) { clearSession(); window.location.href = '/login.html'; }
+    if (res.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/register')) {
+      clearSession();
+      window.location.href = '/login.html';
+    }
     throw new Error(data.message || `HTTP ${res.status}`);
   }
   return data;
@@ -45,6 +48,12 @@ const auth = {
     });
     setSession(data.token, data.user);
     return data;
+  },
+  async register(formData) {
+    return request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(formData)
+    });
   },
   logout() {
     clearSession();
@@ -133,12 +142,18 @@ function requireAuth(allowedRoles = []) {
   if (!auth.isLoggedIn()) { window.location.href = '/login.html'; return; }
   const role = auth.getRole();
   if (allowedRoles.length && !allowedRoles.includes(role)) {
-    alert('Access denied. Redirecting to your dashboard.');
+    console.warn('Access denied for role ' + role + '. Redirecting to role dashboard.');
     redirectByRole(role);
   }
 }
 function redirectByRole(role) {
-  const map = { admin: '/admin.html', captain: '/kagawad.html', kagawad: '/kagawad.html', resident: '/Resident.html' };
+  const map = {
+    admin: '/admin.html',
+    captain: '/captain.html',
+    kagawad: '/kagawad.html',
+    staff: '/staff.html',
+    resident: '/Resident.html'
+  };
   window.location.href = map[role] || '/login.html';
 }
 
