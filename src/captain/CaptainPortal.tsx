@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './captain.css';
 import { useApp } from '../context/AppContext';
 import { exportCaptainReport } from '../utils/reportExporter';
 import { 

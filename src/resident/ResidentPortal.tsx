@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './resident.css';
 import { useApp } from '../context/AppContext';
 import { BlotterRecord } from '../types';
 import { downloadBlotterDocument, downloadBlotterPDF } from '../components/PrintDossierModal';

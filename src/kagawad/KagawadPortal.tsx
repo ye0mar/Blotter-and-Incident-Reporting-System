@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './kagawad.css';
 import { useApp } from '../context/AppContext';
 import { BlotterRecord, BlotterStatus } from '../types';
 import { Search, Edit3, Trash2, X, Archive } from 'lucide-react';

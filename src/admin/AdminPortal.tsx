@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './admin.css';
 import { useApp } from '../context/AppContext';
 import { User, UserRole } from '../types';
 import { exportCapstoneSystemAdminReport } from '../utils/reportExporter';
