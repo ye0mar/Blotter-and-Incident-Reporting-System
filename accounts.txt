@@ -1,0 +1,59 @@
+==============================================================================
+BARANGAY STA. ANA, PATEROS - BLOTTER & INCIDENT REPORTING SYSTEM (BIRS)
+OFFICIAL SYSTEM ACCOUNTS & INITIAL AUTHENTICATION CREDENTIALS
+==============================================================================
+
+IMPORTANT NOTICE:
+This file contains privileged administrative credentials generated for initial
+system access and database deployment. Treat this file as strictly confidential.
+All passwords must be changed upon first production deployment.
+
+------------------------------------------------------------------------------
+1. SYSTEM ADMINISTRATOR (Role: admin)
+------------------------------------------------------------------------------
+Full Name   : System Administrator
+Role        : admin
+Email       : admin@staana.gov.ph
+Password    : Admin#StaAna2026!
+Permissions : Full administrative control, system security parameters,
+              database management, immutable audit logging, user role management,
+              and personnel authorization.
+
+------------------------------------------------------------------------------
+2. PUNONG BARANGAY (Role: captain)
+------------------------------------------------------------------------------
+Full Name   : Hon. Barangay Captain
+Role        : captain
+Email       : captain@staana.gov.ph
+Password    : Captain#StaAna2026!
+Permissions : Executive governance overview, peace & order incident analytics,
+              docket status monitoring, summons review, and official case archives.
+
+------------------------------------------------------------------------------
+3. COMMITTEE ON PEACE & ORDER (Role: kagawad)
+------------------------------------------------------------------------------
+Full Name   : Kagawad on Peace & Order
+Role        : kagawad
+Email       : kagawad@staana.gov.ph
+Password    : Kagawad#StaAna2026!
+Permissions : Lupong Tagapamayapa dispute conciliation, mediation hearing
+              supervision, case investigation notes, and amicable settlement records.
+
+------------------------------------------------------------------------------
+4. INTAKE & RECORDS DESK (Role: staff)
+------------------------------------------------------------------------------
+Full Name   : Duty Desk Officer
+Role        : staff
+Email       : staff@staana.gov.ph
+Password    : Staff#StaAna2026!
+Permissions : Resident walk-in blotter encoding, incident docketing, summons
+              scheduling, official dossier generation, and report export.
+
+------------------------------------------------------------------------------
+RESIDENT ACCOUNTS NOTE:
+------------------------------------------------------------------------------
+In accordance with system security standards, no dummy or sample resident
+accounts have been created. Residents register through the public registration
+portal and are automatically assigned the 'resident' role with restricted citizen
+permissions. Residents cannot assign themselves administrative roles.
+==============================================================================

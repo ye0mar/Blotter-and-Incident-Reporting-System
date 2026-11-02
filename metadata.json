@@ -1,6 +1,6 @@
 {
-  "name": "Barangay Blotter & Incident Report System",
-  "description": "Barangay incident reporting, blotter management, hearing schedules, and resident management system.",
+  "name": "Blotter and Incident Reporting System",
+  "description": "Blotter incident reporting, hearing schedules, and management system.",
   "requestFeedback": false,
   "userFacing": true,
   "capabilities": [

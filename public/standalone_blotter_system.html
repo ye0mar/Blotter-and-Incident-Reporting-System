@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blotter and Incident Reporting System - Barangay Sta. Ana, Pateros</title>
+  <link rel="icon" type="image/png" href="/santa-ana-logo.png">
+  <link rel="shortcut icon" type="image/png" href="/santa-ana-logo.png">
+  <link rel="apple-touch-icon" href="/santa-ana-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Urbanist:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0F172A',
+              indigo: '#6366F1',
+              pastel: '#CAE1F7',
+              dark: '#18283D',
+              surface: '#F8FAFC'
+            }
+          },
+          fontFamily: {
+            heading: ['Urbanist', 'sans-serif'],
+            body: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F8FAFC;
+      color: #18283D;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Urbanist', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 4px;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-modal-content, #print-modal-content * {
+        visibility: visible;
+      }
+      #print-modal-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- ================= TOP HEADER / NAVBAR ================= -->
+  <header id="main-header" class="hidden bg-white/95 backdrop-blur-md text-[#1E293B] sticky top-0 z-40 border-b border-slate-200/80 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Left: Logo + System Title (Clickable to Home/Dashboard) -->
+        <div onclick="navigateHome()" class="flex items-center gap-3 cursor-pointer select-none group">
+          <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 border border-slate-200/60 shadow-xs">
+            <img src="/santa-ana-logo.png" alt="Barangay Logo" class="w-full h-full object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236366f1\' stroke-width=\'2\'><path d=\'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\'/></svg>'">
+          </div>
+          <div>
+            <h1 class="text-[13px] sm:text-[15px] font-bold tracking-wide uppercase leading-tight text-[#1E293B] group-hover:text-blue-700 transition-colors font-heading">
+              BLOTTER AND INCIDENT REPORTING SYSTEM
+            </h1>
+            <p class="text-[11px] text-[#64748B] font-medium">
+              Barangay Sta. Ana, Pateros
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Role Nav Links + Bell + Gear Icon + Logout -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 ml-auto">
+          
+          <!-- Navigation Links Container (Injected based on user role) -->
+          <nav id="role-nav-links" class="hidden md:flex items-center gap-1 text-[13px] sm:text-[14px] font-heading font-medium"></nav>
+
+          <!-- Notification Bell -->
+          <div class="relative">
+            <button onclick="toggleNotifDropdown(event)" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 relative transition-colors" title="Notifications">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notif-badge" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+            </button>
+
+            <!-- Notification Dropdown -->
+            <div id="notif-dropdown" class="hidden absolute right-0 top-11 w-80 bg-white rounded-xl shadow-xl border border-slate-200 text-slate-800 z-50 overflow-hidden text-xs">
+              <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <span id="notif-count-text" class="font-bold text-slate-900">Notifications</span>
+                <button onclick="markAllNotificationsRead()" class="text-slate-700 hover:text-slate-900 font-semibold">Mark all read</button>
+              </div>
+              <div id="notif-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100"></div>
+            </div>
+          </div>
+
+          <!-- Settings Dropdown (Gear Icon Only) -->
+          <div class="relative">
+            <button onclick="toggleSettingsDropdown(event)" id="settings-btn" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" title="Settings & Options">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+
+            <!-- Settings Menu: Separate Pages -->
+            <div id="settings-dropdown" class="hidden absolute right-0 top-11 w-56 bg-white rounded-xl shadow-xl border border-slate-200 text-slate-800 z-50 overflow-hidden py-1.5 text-[13px]">
+              <button onclick="navigateTo('profile'); closeAllDropdowns();" class="w-full px-4 py-2 text-left font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span>Profile</span>
+              </button>
+              <button onclick="navigateTo('preferences'); closeAllDropdowns();" class="w-full px-4 py-2 text-left font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span>Preferences &amp; Notifications</span>
+              </button>
+              <button id="settings-report-issue-btn" onclick="navigateTo('report-issue'); closeAllDropdowns();" class="w-full px-4 py-2 text-left font-medium text-slate-700 hover:bg-slate-50 hover:text-amber-600 flex items-center gap-2.5 border-t border-slate-100 mt-1 pt-2">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>Report an Issue</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Redesigned Soft Red Outline Logout Button -->
+          <button onclick="logout()" class="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 flex items-center gap-1.5 transition-all shadow-xs" title="Logout">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span class="hidden sm:inline">Logout</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT WRAPPER ================= -->
+  <main id="app-root" class="flex-1 pb-16"></main>
+
+  <!-- ================= DOSSIER MODAL ================= -->
+  <div id="dossier-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
+    <div id="print-modal-content" class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative my-6 text-slate-800">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-5">
+        <h3 class="text-xl font-bold font-heading text-slate-900">Official Barangay Blotter Dossier</h3>
+        <button onclick="closeDossierModal()" class="text-slate-500 hover:text-black p-1 text-2xl font-bold">&times;</button>
+      </div>
+      <div id="dossier-content" class="space-y-4 text-xs sm:text-sm"></div>
+      <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-200">
+        <button onclick="closeDossierModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 text-xs font-semibold">Close</button>
+        <button onclick="window.print()" class="px-5 py-2 bg-[#6366F1] text-white rounded-lg hover:bg-indigo-700 text-xs font-semibold shadow-sm">Print Dossier</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // ---------------- APP DATA STATE ----------------
+    const state = {
+      currentUser: null,
+      activeTab: 'login',
+      isRegisterMode: false,
+      notifications: [
+        { id: 1, title: 'Case Hearing Scheduled', message: 'Hearing set for Blotter BLT-2026-001 on May 12, 2026, 9:00 AM.', timestamp: '10 mins ago', read: false, target_role: 'resident' },
+        { id: 2, title: 'New Incident Filed', message: 'Resident Juan Luna filed a new complaint BLT-2026-003.', timestamp: '1 hour ago', read: false, target_role: 'staff' },
+        { id: 3, title: 'Case Investigation Assigned', message: 'Case BLT-2026-002 has been assigned to Kagawad for mediation.', timestamp: '3 hours ago', read: false, target_role: 'kagawad' },
+        { id: 4, title: 'System Security Audit Completed', message: 'All blotter records archived and backup created successfully.', timestamp: '1 day ago', read: true, target_role: 'admin' },
+        { id: 5, title: 'Executive Summary Generated', message: 'Monthly blotter incident trend analytics report is ready for review.', timestamp: '2 days ago', read: true, target_role: 'captain' }
+      ],
+      issueReports: [
+        { id: 1, user_name: 'Juan Dela Cruz', user_email: 'resident@example.com', feature_name: 'Evidence File Upload', description: 'File upload takes long on slow mobile network.', created_at: '2026-05-04 10:30 AM' }
+      ],
+      users: [
+        { id: 1, user_id: 'ADM-001', full_name: 'Administrator', email: 'admin@example.com', role: 'admin', status: 'active', phone: '09171112222', address: 'Barangay Hall' },
+        { id: 2, user_id: 'CPT-001', full_name: 'Hon. Captain Roberto Reyes', email: 'captain@example.com', role: 'captain', status: 'active', phone: '09182223333', address: 'P. Rosales St.' },
+        { id: 3, user_id: 'KAG-001', full_name: 'Kagawad Juan Dela Cruz', email: 'kagawad@example.com', role: 'kagawad', status: 'active', phone: '09193334444', address: 'Alley 1' },
+        { id: 4, user_id: 'STF-001', full_name: 'Staff Officer Maria Santos', email: 'staff@example.com', role: 'staff', status: 'active', phone: '09204445555', address: 'Bgy Staff Quarters' },
+        { id: 5, user_id: 'RES-001', full_name: 'Resident Pedro Cruz', email: 'resident@example.com', role: 'resident', status: 'active', phone: '09215556666', address: 'Blk 4 Lot 10, Pateros' }
+      ],
+      blotters: [
+        { id: 1, blotter_id: 'BLT-2026-001', complainant_name: 'Juan Luna Dela Cruz', respondent_name: 'Jessie Santos', incident_type: 'Pisikal na Pananakit', incident_location: 'Alley 1 P Rosales St.', incident_datetime: '2026-05-02T14:00', status: 'investigating', reported_at: 'May 2, 2026 2:00 PM', official_name: 'Staff Officer Maria Santos' },
+        { id: 2, blotter_id: 'BLT-2026-002', complainant_name: 'Ana Patricia Gonzales', respondent_name: 'Felipe Penduko', incident_type: 'Pagnanakaw', incident_location: 'Blk 2 Pateros Central', incident_datetime: '2026-05-01T10:30', status: 'pending', reported_at: 'May 1, 2026 10:30 AM', official_name: 'Staff Officer Maria Santos' },
+        { id: 3, blotter_id: 'BLT-2026-003', complainant_name: 'Ricardo Morales', respondent_name: 'Carlito Dalisay', incident_type: 'Karahasang Domestiko', incident_location: 'Alley 5 Sta. Ana', incident_datetime: '2026-04-28T09:15', status: 'resolved', reported_at: 'Apr 28, 2026 9:15 AM', official_name: 'Kagawad Juan Dela Cruz' }
+      ],
+      schedules: [
+        { id: 1, blotter_id: 'BLT-2026-001', complainant_name: 'Juan Luna Dela Cruz', respondent_name: 'Jessie Santos', incident_type: 'Pisikal na Pananakit', schedule_date: '2026-05-12T09:00', location: 'Barangay Mediation Hall' },
+        { id: 2, blotter_id: 'BLT-2026-002', complainant_name: 'Ana Patricia Gonzales', respondent_name: 'Felipe Penduko', incident_type: 'Pagnanakaw', schedule_date: '2026-05-14T14:00', location: 'Barangay Session Room' }
+      ],
+      currentDossier: null,
+      systemSettings: {
+        emailNotification: true,
+        requireApproval: true,
+        maintenanceMode: false,
+        autoArchivePeriod: '90 days',
+        lastBackupDate: 'April 26, 2026'
+      },
+      activityLogs: [
+        { id: 1, text: 'Admin logged in', time: '4/27/2026, 12:01:53 PM', user: 'Admin' },
+        { id: 2, text: 'System started', time: '4/27/2026, 12:01:53 PM', user: 'System' }
+      ]
+    };
+
+    function toggleSystemSetting(key) {
+      state.systemSettings[key] = !state.systemSettings[key];
+      renderApp();
+    }
+
+    function setArchivePeriod(val) {
+      state.systemSettings.autoArchivePeriod = val;
+    }
+
+    function saveSystemSettings() {
+      alert('System configuration saved successfully!');
+    }
+
+    function createBackup() {
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', dataStr);
+      downloadAnchor.setAttribute('download', 'staana_blotter_backup.json');
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      state.systemSettings.lastBackupDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      state.activityLogs.unshift({
+        id: Date.now(),
+        text: 'Database backup downloaded',
+        time: new Date().toLocaleString(),
+        user: state.currentUser ? state.currentUser.full_name : 'Admin'
+      });
+      renderApp();
+    }
+
+    function clearDatabase() {
+      if (confirm('Are you sure you want to clear all blotter and log data?')) {
+        state.blotters = [];
+        state.activityLogs = [{ id: Date.now(), text: 'Database cleared by administrator', time: new Date().toLocaleString(), user: 'Admin' }];
+        renderApp();
+      }
+    }
+
+    // ---------------- DROPDOWN CONTROLS ----------------
+    function toggleNotifDropdown(e) {
+      e.stopPropagation();
+      const dd = document.getElementById('notif-dropdown');
+      const settingsDd = document.getElementById('settings-dropdown');
+      settingsDd.classList.add('hidden');
+      dd.classList.toggle('hidden');
+      renderNotifications();
+    }
+
+    function toggleSettingsDropdown(e) {
+      e.stopPropagation();
+      const dd = document.getElementById('settings-dropdown');
+      const notifDd = document.getElementById('notif-dropdown');
+      notifDd.classList.add('hidden');
+      dd.classList.toggle('hidden');
+    }
+
+    function closeAllDropdowns() {
+      document.getElementById('notif-dropdown').classList.add('hidden');
+      document.getElementById('settings-dropdown').classList.add('hidden');
+    }
+
+    window.addEventListener('click', () => closeAllDropdowns());
+
+    // ---------------- NOTIFICATIONS ----------------
+    function getRoleNotifications() {
+      if (!state.currentUser) return [];
+      return state.notifications.filter(n => {
+        if (n.target_role === 'all') return true;
+        if (n.target_role === state.currentUser.role) return true;
+        if (['admin', 'captain', 'kagawad'].includes(state.currentUser.role)) {
+          return ['staff', 'admin', 'all'].includes(n.target_role);
+        }
+        return false;
+      });
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById('notif-list');
+      const notifs = getRoleNotifications();
+      const unread = notifs.filter(n => !n.read).length;
+      
+      const badge = document.getElementById('notif-badge');
+      if (unread > 0) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      document.getElementById('notif-count-text').innerText = `Notifications (${unread} unread)`;
+
+      if (notifs.length === 0) {
+        list.innerHTML = `<div class="p-4 text-center text-slate-400">No notifications.</div>`;
+        return;
+      }
+
+      list.innerHTML = notifs.map(n => `
+        <div onclick="markNotifRead(${n.id})" class="p-3 hover:bg-slate-50 cursor-pointer ${n.read ? 'opacity-70 bg-white' : 'bg-indigo-50/40'}">
+          <div class="flex justify-between font-bold text-slate-900 mb-0.5">
+            <span>${n.title}</span>
+            <span class="text-[10px] text-slate-400">${n.timestamp}</span>
+          </div>
+          <p class="text-slate-600 leading-snug">${n.message}</p>
+        </div>
+      `).join('');
+    }
+
+    function markNotifRead(id) {
+      const n = state.notifications.find(x => x.id === id);
+      if (n) n.read = true;
+      renderNotifications();
+    }
+
+    function markAllNotificationsRead() {
+      state.notifications.forEach(n => n.read = true);
+      renderNotifications();
+    }
+
+    // ---------------- NAVIGATION ----------------
+    function navigateTo(tab) {
+      state.activeTab = tab;
+      renderApp();
+    }
+
+    function navigateHome() {
+      if (!state.currentUser) {
+        navigateTo('login');
+        return;
+      }
+      const roleMap = {
+        admin: 'user-management',
+        captain: 'captain-dashboard',
+        kagawad: 'kagawad-investigate',
+        staff: 'staff-dashboard',
+        resident: 'resident-home'
+      };
+      navigateTo(roleMap[state.currentUser.role] || 'staff-dashboard');
+    }
+
+    function loginAs(role) {
+      const user = state.users.find(u => u.role === role);
+      if (user) {
+        state.currentUser = user;
+        navigateHome();
+      }
+    }
+
+    function logout() {
+      state.currentUser = null;
+      state.activeTab = 'login';
+      renderApp();
+    }
+
+    // ---------------- DOSSIER MODAL ----------------
+    function openDossier(blotterId) {
+      const record = state.blotters.find(b => b.blotter_id === blotterId);
+      if (!record) return;
+      state.currentDossier = record;
+      const c = document.getElementById('dossier-content');
+      c.innerHTML = `
+        <div class="text-center pb-3 border-b border-slate-200">
+          <div class="text-xs uppercase font-bold text-slate-500">Republic of the Philippines • Barangay Sta. Ana, Pateros</div>
+          <div class="text-lg font-bold text-[#0F172A] font-heading mt-1">OFFICIAL BLOTTER ENTRY REPORT</div>
+          <div class="text-xs font-mono text-indigo-600 font-bold">${record.blotter_id}</div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 py-2">
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <span class="block text-slate-400 font-semibold text-[11px]">NAG-UULAT (COMPLAINANT)</span>
+            <span class="font-bold text-slate-900 text-sm">${record.complainant_name}</span>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <span class="block text-slate-400 font-semibold text-[11px]">INAANGKIN NA NASASANGKOT (RESPONDENT)</span>
+            <span class="font-bold text-slate-900 text-sm">${record.respondent_name}</span>
+          </div>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+          <div><strong class="text-slate-500">Uri ng Insidente:</strong> <span class="font-semibold text-slate-900">${record.incident_type}</span></div>
+          <div><strong class="text-slate-500">Lugar:</strong> <span class="text-slate-800">${record.incident_location}</span></div>
+          <div><strong class="text-slate-500">Petsa at Oras:</strong> <span class="text-slate-800">${record.incident_datetime || record.reported_at}</span></div>
+          <div><strong class="text-slate-500">Status:</strong> <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase ${record.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${record.status}</span></div>
+        </div>
+      `;
+      document.getElementById('dossier-modal').classList.remove('hidden');
+    }
+
+    function closeDossierModal() {
+      document.getElementById('dossier-modal').classList.add('hidden');
+    }
+
+    // ---------------- RESET PASSWORD (ADMIN FEATURE) ----------------
+    function handleAdminResetPassword(userId) {
+      const u = state.users.find(x => x.id === userId);
+      if (u) {
+        alert(`Password for user ${u.full_name} (${u.email}) has been reset to: Pateros@2026`);
+        renderApp();
+      }
+    }
+
+    // ---------------- SUBMIT BUG REPORT ----------------
+    function submitIssueReport(e) {
+      e.preventDefault();
+      const feat = document.getElementById('report-feature-input').value;
+      const desc = document.getElementById('report-desc-input').value;
+      const fileInput = document.getElementById('report-screenshot-input');
+      if (!feat || !desc) return;
+
+      const finishSubmit = (screenshotData) => {
+        state.issueReports.unshift({
+          id: Date.now(),
+          user_name: state.currentUser.full_name,
+          user_email: state.currentUser.email,
+          feature_name: feat,
+          description: desc,
+          screenshot: screenshotData || null,
+          created_at: new Date().toLocaleString()
+        });
+        alert('Your issue report (with screenshot) has been submitted to the Administrators. Thank you!');
+        navigateTo('report-issue');
+      };
+
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          finishSubmit(evt.target.result);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        finishSubmit(null);
+      }
+    }
+
+    // ---------------- MAIN RENDER ENGINE ----------------
+    function renderApp() {
+      const header = document.getElementById('main-header');
+      const root = document.getElementById('app-root');
+      const roleNav = document.getElementById('role-nav-links');
+      const reportIssueBtn = document.getElementById('settings-report-issue-btn');
+
+      if (!state.currentUser || state.activeTab === 'login') {
+        header.classList.add('hidden');
+        root.innerHTML = renderLoginRegisterView();
+        return;
+      }
+
+      header.classList.remove('hidden');
+      renderNotifications();
+
+      // Rule: For Admin, Settings dropdown hides "Report Issue"
+      if (state.currentUser.role === 'admin') {
+        reportIssueBtn.classList.add('hidden');
+      } else {
+        reportIssueBtn.classList.remove('hidden');
+      }
+
+      // Render role nav links
+      roleNav.innerHTML = getRoleNavButtons();
+
+      // Render active screen
+      if (state.activeTab === 'profile' || state.activeTab === 'settings' || state.activeTab === 'account') {
+        root.innerHTML = renderProfileView();
+      } else if (state.activeTab === 'preferences' || state.activeTab === 'notifications') {
+        root.innerHTML = renderPreferencesView();
+      } else if (state.activeTab === 'report-issue') {
+        root.innerHTML = renderReportIssueView();
+      } else if (state.currentUser.role === 'admin') {
+        root.innerHTML = renderAdminPortal();
+      } else if (state.currentUser.role === 'captain') {
+        root.innerHTML = renderCaptainPortal();
+      } else if (state.currentUser.role === 'kagawad') {
+        root.innerHTML = renderKagawadPortal();
+      } else if (state.currentUser.role === 'staff') {
+        root.innerHTML = renderStaffPortal();
+      } else if (state.currentUser.role === 'resident') {
+        root.innerHTML = renderResidentPortal();
+      }
+    }
+
+    function getRoleNavButtons() {
+      const role = state.currentUser.role;
+      const tab = state.activeTab;
+      const btn = (name, target) => `
+        <button onclick="navigateTo('${target}')" class="px-3.5 py-1.5 rounded-full transition-all text-xs sm:text-sm ${tab === target ? 'bg-[#CAE1F7] text-[#1E3A8A] font-semibold shadow-xs' : 'text-[#64748B] hover:bg-slate-100 hover:text-[#1E293B] font-medium'}">
+          ${name}
+        </button>
+      `;
+
+      if (role === 'admin') {
+        return btn('User Management', 'user-management') + btn('Issue Reports', 'issue-reports') + btn('System Settings', 'system-settings');
+      }
+      if (role === 'captain') {
+        return btn('Dashboard', 'captain-dashboard') + btn('Analytics', 'captain-analytics') + btn('Report', 'captain-report');
+      }
+      if (role === 'resident') {
+        return btn('Home', 'resident-home') + btn('My Complaints', 'resident-complaints') + btn('My Schedule', 'resident-schedules');
+      }
+      if (role === 'staff') {
+        return btn('Dashboard', 'staff-dashboard') + btn('Create Report', 'staff-create-report') + btn('All Incidents', 'staff-all-incident') + btn('Schedule', 'staff-schedule');
+      }
+      if (role === 'kagawad') {
+        return btn('Investigate', 'kagawad-investigate') + btn('My Schedule', 'kagawad-schedule');
+      }
+      return '';
+    }
+
+    // ---------------- TEMPLATES ----------------
+    function renderLoginRegisterView() {
+      return `
+        <div class="min-h-screen flex items-center justify-center p-4">
+          <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-xl border border-slate-200 text-center">
+            <div class="w-16 h-16 rounded-full mx-auto mb-3 overflow-hidden flex items-center justify-center">
+              <img src="/santa-ana-logo.png" alt="Logo" class="w-full h-full object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236366f1\' stroke-width=\'2\'><path d=\'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\'/></svg>'">
+            </div>
+            <h1 class="text-[19px] font-extrabold text-[#0F172A] tracking-wide uppercase font-heading">
+              BLOTTER AND INCIDENT REPORTING SYSTEM
+            </h1>
+            <p class="text-[12px] text-slate-500 font-medium mb-6">Barangay Sta. Ana, Pateros</p>
+
+            <div class="space-y-4 text-left">
+              <div>
+                <label class="block text-[13px] font-semibold text-slate-700 mb-1">Select Role to Sign In (Interactive Demo):</label>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button onclick="loginAs('admin')" class="p-2.5 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">Admin</button>
+                  <button onclick="loginAs('captain')" class="p-2.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700">Barangay Captain</button>
+                  <button onclick="loginAs('kagawad')" class="p-2.5 bg-amber-600 text-white rounded-lg text-xs font-semibold hover:bg-amber-700">Kagawad</button>
+                  <button onclick="loginAs('staff')" class="p-2.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700">Barangay Staff</button>
+                  <button onclick="loginAs('resident')" class="col-span-2 p-2.5 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700">Resident / User</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminPortal() {
+      const activeTab = state.activeTab;
+      return `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <!-- 4 Stat Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+              <div class="text-[13px] font-medium text-slate-500 mb-1">Total Users</div>
+              <div class="text-[26px] font-bold text-slate-900 tracking-tight font-heading">${state.users.length}</div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+              <div class="text-[13px] font-medium text-slate-500 mb-1">Active Users</div>
+              <div class="text-[26px] font-bold text-emerald-600 tracking-tight font-heading">${state.users.filter(u=>u.status==='active').length}</div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+              <div class="text-[13px] font-medium text-slate-500 mb-1">Total Incidents</div>
+              <div class="text-[26px] font-bold text-[#6366F1] tracking-tight font-heading">${state.blotters.length}</div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+              <div class="text-[13px] font-medium text-slate-500 mb-1">Issue Reports</div>
+              <div class="text-[26px] font-bold text-amber-600 tracking-tight font-heading">${state.issueReports.length}</div>
+            </div>
+          </div>
+
+          ${activeTab === 'system-settings' ? `
+            <div class="space-y-6">
+              <!-- CARD 1: System Configuration (Matching image_032c20f6.png) -->
+              <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-5">
+                <div class="flex items-start gap-3 border-b border-slate-100 pb-4">
+                  <div class="p-2 rounded-xl bg-slate-100 text-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-bold text-slate-900 font-heading">System Configuration</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Configure system behavior and preferences</p>
+                  </div>
+                </div>
+
+                <div class="space-y-3.5">
+                  <!-- Email Notification -->
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-slate-900 text-sm">Email Notification</div>
+                      <div class="text-xs text-slate-500 mt-0.5">Send email alerts for new incidents</div>
+                    </div>
+                    <button onclick="toggleSystemSetting('emailNotification')" class="relative inline-flex h-6 w-12 rounded-full transition-colors ${state.systemSettings.emailNotification ? 'bg-slate-900' : 'bg-slate-200'}">
+                      <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${state.systemSettings.emailNotification ? 'translate-x-6' : 'translate-x-0'}"></span>
+                    </button>
+                  </div>
+
+                  <!-- Require Approval -->
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-slate-900 text-sm">Require Approval</div>
+                      <div class="text-xs text-slate-500 mt-0.5">All new complaints require captain approval</div>
+                    </div>
+                    <button onclick="toggleSystemSetting('requireApproval')" class="relative inline-flex h-6 w-12 rounded-full transition-colors ${state.systemSettings.requireApproval ? 'bg-slate-900' : 'bg-slate-200'}">
+                      <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${state.systemSettings.requireApproval ? 'translate-x-6' : 'translate-x-0'}"></span>
+                    </button>
+                  </div>
+
+                  <!-- Maintenance Mode -->
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-slate-900 text-sm">Maintenance Mode</div>
+                      <div class="text-xs text-slate-500 mt-0.5">Disable public access to the system</div>
+                    </div>
+                    <button onclick="toggleSystemSetting('maintenanceMode')" class="relative inline-flex h-6 w-12 rounded-full transition-colors ${state.systemSettings.maintenanceMode ? 'bg-slate-900' : 'bg-slate-200'}">
+                      <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${state.systemSettings.maintenanceMode ? 'translate-x-6' : 'translate-x-0'}"></span>
+                    </button>
+                  </div>
+
+                  <!-- Auto-Archive Period -->
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2.5">
+                    <div>
+                      <div class="font-semibold text-slate-900 text-sm">Auto-Archive Period</div>
+                      <div class="text-xs text-slate-500 mt-0.5">Automatically archive resolved incidents after specified days</div>
+                    </div>
+                    <select onchange="setArchivePeriod(this.value)" class="w-full sm:w-64 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:outline-none focus:border-blue-500">
+                      <option value="30 days" ${state.systemSettings.autoArchivePeriod === '30 days' ? 'selected' : ''}>30 days</option>
+                      <option value="60 days" ${state.systemSettings.autoArchivePeriod === '60 days' ? 'selected' : ''}>60 days</option>
+                      <option value="90 days" ${state.systemSettings.autoArchivePeriod === '90 days' ? 'selected' : ''}>90 days</option>
+                      <option value="180 days" ${state.systemSettings.autoArchivePeriod === '180 days' ? 'selected' : ''}>180 days</option>
+                      <option value="Never" ${state.systemSettings.autoArchivePeriod === 'Never' ? 'selected' : ''}>Never</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button onclick="saveSystemSettings()" class="w-full py-3 px-4 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm">
+                  Save Settings
+                </button>
+              </div>
+
+              <!-- CARD 2: Database Management (Matching image_f5f113ef.png) -->
+              <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-5">
+                <div class="flex items-start gap-3 border-b border-slate-100 pb-4">
+                  <div class="p-2 rounded-xl bg-slate-100 text-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-bold text-slate-900 font-heading">Database Management</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Backup, restore, and manage system data</p>
+                  </div>
+                </div>
+
+                <!-- 2 Side-by-Side Action Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white flex flex-col justify-between space-y-3">
+                    <div>
+                      <div class="font-bold text-slate-900 text-sm">Backup Data</div>
+                      <div class="text-xs text-slate-500 mt-1">Export all system data including users and incidents</div>
+                    </div>
+                    <button onclick="createBackup()" class="py-2.5 px-4 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      <span>Create Backup</span>
+                    </button>
+                  </div>
+
+                  <div class="p-4 rounded-xl border border-slate-200 bg-white flex flex-col justify-between space-y-3">
+                    <div>
+                      <div class="font-bold text-slate-900 text-sm">Clear Data</div>
+                      <div class="text-xs text-slate-500 mt-1">Purge all system data including blotters and activity logs</div>
+                    </div>
+                    <button onclick="clearDatabase()" class="py-2.5 px-4 bg-[#dc2626] hover:bg-red-700 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                      <span>Clear Data</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Database Statistics Box (Captain report styled) -->
+                <div class="p-5 rounded-2xl bg-[#eff6ff]/70 border border-blue-100">
+                  <h4 class="font-bold text-slate-900 text-sm mb-4">Database Statistics</h4>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                      <div class="text-xs text-slate-500 font-medium">Total Users</div>
+                      <div class="text-base font-bold text-slate-800 mt-1">${state.users.length}</div>
+                    </div>
+                    <div>
+                      <div class="text-xs text-slate-500 font-medium">Total Incidents</div>
+                      <div class="text-base font-bold text-slate-800 mt-1">${state.blotters.length}</div>
+                    </div>
+                    <div>
+                      <div class="text-xs text-slate-500 font-medium">Storage Used</div>
+                      <div class="text-base font-bold text-slate-800 mt-1">0.5 KB</div>
+                    </div>
+                    <div>
+                      <div class="text-xs text-slate-500 font-medium">Last Backup</div>
+                      <div class="text-base font-bold text-slate-800 mt-1">${state.systemSettings.lastBackupDate}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- System Logs Box -->
+                <div class="space-y-3">
+                  <div>
+                    <h4 class="font-bold text-slate-900 text-sm">System Logs</h4>
+                    <p class="text-xs text-slate-500">Recent system activity</p>
+                  </div>
+                  <div class="space-y-2">
+                    ${state.activityLogs.map(log => `
+                      <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-700 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                          <span class="text-slate-400 font-mono text-[11px] whitespace-nowrap">${log.time}</span>
+                          <span class="text-slate-400">—</span>
+                          <span class="font-medium text-slate-800">${log.text}</span>
+                        </div>
+                        <span class="text-[10px] uppercase font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 shrink-0">
+                          ${log.user}
+                        </span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ` : activeTab === 'issue-reports' ? `
+            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <div class="border-b border-slate-100 pb-3">
+                <h2 class="text-[18px] font-bold text-slate-900 font-heading">User Issue & Bug Reports</h2>
+                <p class="text-[13px] text-slate-500">Reports submitted by residents, staff, and officials regarding system features.</p>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                    <tr>
+                      <th class="py-3 px-4">User</th>
+                      <th class="py-3 px-4">Feature</th>
+                      <th class="py-3 px-4">Description</th>
+                      <th class="py-3 px-4 text-center">Screenshot</th>
+                      <th class="py-3 px-4">Submitted At</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${state.issueReports.map(ir => `
+                      <tr>
+                        <td class="py-3 px-4 font-medium text-slate-900">${ir.user_name}<div class="text-[11px] text-slate-400">${ir.user_email}</div></td>
+                        <td class="py-3 px-4 font-semibold text-slate-900">${ir.feature_name}</td>
+                        <td class="py-3 px-4 text-slate-600">${ir.description}</td>
+                        <td class="py-3 px-4 text-center">
+                          ${ir.screenshot ? `<img src="${ir.screenshot}" class="w-10 h-8 object-cover rounded border border-slate-200 inline-block cursor-pointer" onclick="window.open('${ir.screenshot}')" title="Click to open screenshot">` : '<span class="text-slate-400 text-xs italic">None</span>'}
+                        </td>
+                        <td class="py-3 px-4 text-slate-400">${ir.created_at}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ` : `
+            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+                <div>
+                  <h2 class="text-[18px] font-bold text-slate-900 font-heading">User Accounts Management</h2>
+                  <p class="text-[13px] text-slate-500">View user credentials, roles, and reset forgotten passwords.</p>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                    <tr>
+                      <th class="py-3 px-4">User ID</th>
+                      <th class="py-3 px-4">Name & Email</th>
+                      <th class="py-3 px-4">Role</th>
+                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${state.users.map(u => `
+                      <tr>
+                        <td class="py-3 px-4 font-mono font-medium">${u.user_id}</td>
+                        <td class="py-3 px-4 font-semibold text-slate-900">${u.full_name}<div class="text-[11px] text-slate-400 font-normal">${u.email}</div></td>
+                        <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase bg-indigo-50 text-indigo-700 border border-indigo-200">${u.role}</span></td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">${u.status}</span></td>
+                        <td class="py-3 px-4 text-right">
+                          <button onclick="handleAdminResetPassword(${u.id})" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded text-xs font-semibold border border-slate-200">
+                            Reset Password
+                          </button>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderProfileSubNav(active) {
+      const u = state.currentUser;
+      return `
+        <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+          <button onclick="navigateTo('profile')" class="px-4 py-2 rounded-lg text-[13px] font-semibold ${active === 'profile' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'} transition-colors">
+            Profile &amp; Password
+          </button>
+          <button onclick="navigateTo('preferences')" class="px-4 py-2 rounded-lg text-[13px] font-semibold ${active === 'preferences' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'} transition-colors">
+            Preferences &amp; Notifications
+          </button>
+          ${u.role !== 'admin' ? `
+            <button onclick="navigateTo('report-issue')" class="px-4 py-2 rounded-lg text-[13px] font-semibold ${active === 'report-issue' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'} transition-colors">
+              Report an Issue
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderProfileView() {
+      const u = state.currentUser;
+      return `
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          ${renderProfileSubNav('profile')}
+
+          <!-- Card 1: User Information -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <h3 class="text-[16px] font-bold text-slate-900 font-heading border-b border-slate-100 pb-2">User Information</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Full Name</label>
+                <input type="text" value="${u.full_name}" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Email Address (Read-only)</label>
+                <input type="text" disabled value="${u.email}" class="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-500 rounded-lg">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Contact Number</label>
+                <input type="text" value="${u.phone || '09123456789'}" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Address</label>
+                <input type="text" value="${u.address || 'Barangay Sta. Ana, Pateros'}" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+            </div>
+            <div class="flex justify-end pt-2">
+              <button onclick="alert('Profile details updated successfully!')" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">Save Profile Details</button>
+            </div>
+          </div>
+
+          <!-- Card 2: Security & Password (Together with User Info) -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <h3 class="text-[16px] font-bold text-slate-900 font-heading border-b border-slate-100 pb-2">Security &amp; Password</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm">
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Current Password</label>
+                <input type="password" placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">New Password</label>
+                <input type="password" placeholder="At least 6 chars" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Confirm Password</label>
+                <input type="password" placeholder="Repeat password" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              </div>
+            </div>
+            <div class="flex justify-end pt-2">
+              <button onclick="alert('Password updated successfully!')" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">Update Password</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPreferencesView() {
+      return `
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          ${renderProfileSubNav('preferences')}
+
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4 text-xs sm:text-sm">
+            <h3 class="text-[16px] font-bold text-slate-900 font-heading border-b border-slate-100 pb-2">Delivery Channels</h3>
+            
+            <label class="flex items-center justify-between p-3.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <div>
+                <div class="font-semibold text-slate-900">Email Notifications</div>
+                <div class="text-xs text-slate-500">Receive email alerts for official summons, status changes, and notices.</div>
+              </div>
+              <input type="checkbox" checked class="w-4 h-4 accent-slate-900">
+            </label>
+
+            <label class="flex items-center justify-between p-3.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <div>
+                <div class="font-semibold text-slate-900">SMS / Text Alerts</div>
+                <div class="text-xs text-slate-500">Get text alerts on registered mobile number for urgent hearing reminders.</div>
+              </div>
+              <input type="checkbox" class="w-4 h-4 accent-slate-900">
+            </label>
+
+            <label class="flex items-center justify-between p-3.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <div>
+                <div class="font-semibold text-slate-900">Hearing &amp; Mediation Reminders</div>
+                <div class="text-xs text-slate-500">Automated reminder 24 hours prior to scheduled barangay mediation.</div>
+              </div>
+              <input type="checkbox" checked class="w-4 h-4 accent-slate-900">
+            </label>
+
+            <div class="flex justify-end pt-3">
+              <button onclick="alert('Preferences saved successfully!')" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">Save Preferences</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReportIssueView() {
+      return `
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          ${renderProfileSubNav('report-issue')}
+
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <h3 class="text-[16px] font-bold text-slate-900 font-heading border-b border-slate-100 pb-2">Submit New Issue Report</h3>
+            <form onsubmit="submitIssueReport(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Feature Name</label>
+                <input id="report-feature-input" type="text" required placeholder="e.g. Create Report Wizard, Print Dossier" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Issue Description</label>
+                <textarea id="report-desc-input" rows="4" required placeholder="Describe what went wrong or steps to reproduce..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm"></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Attach Screenshot (Optional)</label>
+                <input id="report-screenshot-input" type="file" accept="image/*" class="w-full p-2 border border-slate-300 rounded-lg text-xs bg-slate-50">
+              </div>
+              <div class="flex justify-end pt-2">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">Submit Issue Report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderResidentPortal() {
+      return `
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <h2 class="text-2xl font-bold font-heading text-slate-900">Welcome, ${state.currentUser.full_name}</h2>
+            <p class="text-sm text-slate-500">File complaints, track ongoing blotter cases, and view scheduled hearings.</p>
+            <div class="flex gap-3 pt-2">
+              <button onclick="navigateTo('resident-complaints')" class="px-5 py-2.5 bg-[#6366F1] text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm">View My Complaints</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <h3 class="text-lg font-bold font-heading text-slate-900">Recent Blotter Complaints</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs sm:text-sm">
+                <thead class="bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                  <tr>
+                    <th class="py-3 px-4">Blotter ID</th>
+                    <th class="py-3 px-4">Uri ng Insidente</th>
+                    <th class="py-3 px-4">Respondent</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-right">Dossier</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${state.blotters.map(b => `
+                    <tr>
+                      <td class="py-3 px-4 font-mono font-medium">${b.blotter_id}</td>
+                      <td class="py-3 px-4 font-semibold">${b.incident_type}</td>
+                      <td class="py-3 px-4">${b.respondent_name}</td>
+                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold uppercase ${b.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${b.status}</span></td>
+                      <td class="py-3 px-4 text-right"><button onclick="openDossier('${b.blotter_id}')" class="text-indigo-600 font-semibold hover:underline">View Dossier</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStaffPortal() {
+      const activeTab = state.activeTab;
+      if (activeTab === 'staff-create-report') {
+        return `
+          <div class="max-w-4xl mx-auto px-4 sm:px-8 py-8 space-y-6">
+            <div class="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+              <div class="flex items-center justify-center gap-3 sm:gap-6 text-[#0F172A] pb-4 border-b border-slate-200 mx-auto">
+                <img src="/santa-ana-logo.png" alt="Barangay Sta. Ana Logo" class="w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0">
+                <div class="text-center space-y-0.5 leading-relaxed">
+                  <div class="font-bold text-xs sm:text-sm font-heading">Republic of the Philippines</div>
+                  <div class="font-bold text-xs sm:text-sm text-slate-600 font-heading">National Capital Region</div>
+                  <div class="font-bold text-xs sm:text-sm text-slate-700 font-heading">Municipality of Pateros</div>
+                  <div class="font-extrabold text-sm sm:text-base text-[#0d3461] font-heading">BARANGAY STA. ANA</div>
+                </div>
+                <img src="/pateros-logo.png" alt="Pateros Logo" class="w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0" onerror="this.src='/pateros-logo.svg'">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Bilang ng blotter entry</label>
+                  <input type="text" disabled value="Auto-generated upon submission" class="w-full px-3 py-2 rounded-md border border-slate-300 text-xs bg-slate-50 text-slate-400">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Petsa at oras ng pag-uulat</label>
+                  <input type="text" value="${new Date().toLocaleString()}" class="w-full px-3 py-2 rounded-md border border-slate-300 text-xs">
+                </div>
+              </div>
+
+              <div>
+                <div class="font-bold text-xs sm:text-sm text-slate-900 border-b border-slate-200 pb-1.5 mb-3.5 tracking-wide font-heading">
+                  NAG-UULAT NA TAO
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Pangalan</label>
+                    <input id="staff-comp-name" type="text" placeholder="Buong Pangalan" class="w-full px-3 py-2 border border-slate-300 rounded-md text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tirahan</label>
+                    <input id="staff-comp-addr" type="text" placeholder="Tirahan sa Pateros" class="w-full px-3 py-2 border border-slate-300 rounded-md text-xs">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="font-bold text-xs sm:text-sm text-slate-900 border-b border-slate-200 pb-1.5 mb-3.5 tracking-wide font-heading">
+                  INAANGKIN NA NASASANGKOT
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Pangalan</label>
+                    <input id="staff-resp-name" type="text" placeholder="Buong Pangalan" class="w-full px-3 py-2 border border-slate-300 rounded-md text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tirahan</label>
+                    <input id="staff-resp-addr" type="text" placeholder="Tirahan sa Pateros" class="w-full px-3 py-2 border border-slate-300 rounded-md text-xs">
+                  </div>
+                </div>
+              </div>
+
+              <!-- MGA KALAKIP NA DOKUMENTO / EBIDENSYA (Matching image_76db0ca8.png) -->
+              <div class="space-y-1">
+                <div class="font-bold text-xs sm:text-sm text-slate-900 border-b border-slate-200 pb-1.5 mb-2 tracking-wide font-heading">
+                  MGA KALAKIP NA DOKUMENTO/EBIDENSYA (OPSYONAL)
+                </div>
+                <p class="text-[12px] text-slate-500 mb-2">Mag-upload ng anumang dokumento, larawan, video, o audio file bilang suporta</p>
+                <div class="border border-dashed border-slate-300 rounded-xl p-6 text-center bg-white hover:bg-slate-50/50 transition-colors">
+                  <label class="flex flex-col items-center justify-center cursor-pointer select-none">
+                    <input type="file" multiple accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="alert('Evidence file attached: ' + (this.files[0] ? this.files[0].name : 'File'))">
+                    <svg class="w-6 h-6 text-slate-400 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span class="text-[13px] font-medium text-slate-700">Click to upload screenshot or drag and drop</span>
+                    <span class="text-[11px] text-slate-400 mt-1">PNG, JPG, WebP supported • You can also paste directly from clipboard (Ctrl+V)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                <button onclick="navigateTo('staff-all-incident')" class="px-4 py-2 border border-slate-300 rounded-md text-xs font-semibold">Cancel</button>
+                <button onclick="handleStaffCreateSubmit()" class="px-6 py-2 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700 shadow-sm">Submit Report</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold font-heading text-slate-900">Barangay Blotter Records</h2>
+              <p class="text-xs text-slate-500">Official incident recording and hearing schedule management</p>
+            </div>
+            <button onclick="navigateTo('staff-create-report')" class="px-4 py-2 bg-[#6366F1] text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 shadow-sm">Create Report</button>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                <tr>
+                  <th class="py-3 px-4">Blotter ID</th>
+                  <th class="py-3 px-4">Complainant</th>
+                  <th class="py-3 px-4">Respondent</th>
+                  <th class="py-3 px-4">Incident Type</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${state.blotters.map(b => `
+                  <tr>
+                    <td class="py-3 px-4 font-mono font-medium">${b.blotter_id}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-900">${b.complainant_name}</td>
+                    <td class="py-3 px-4">${b.respondent_name}</td>
+                    <td class="py-3 px-4 text-slate-600">${b.incident_type}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold uppercase ${b.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${b.status}</span></td>
+                    <td class="py-3 px-4 text-right"><button onclick="openDossier('${b.blotter_id}')" class="text-indigo-600 font-semibold hover:underline">View Dossier</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function autoSaveStandaloneForm() {
+      try {
+        const comp = document.getElementById('staff-comp-name')?.value || '';
+        const resp = document.getElementById('staff-resp-name')?.value || '';
+        if (comp || resp) {
+          localStorage.setItem('standalone_create_report_draft', JSON.stringify({ comp, resp }));
+        }
+      } catch (e) {}
+    }
+
+    function clearStandaloneDraft() {
+      try {
+        localStorage.removeItem('standalone_create_report_draft');
+      } catch (e) {}
+    }
+
+    function handleStaffCreateSubmit() {
+      const comp = document.getElementById('staff-comp-name')?.value;
+      const resp = document.getElementById('staff-resp-name')?.value;
+      if (!comp || !resp) {
+        alert('Please fill in complainant and respondent names.');
+        return;
+      }
+      clearStandaloneDraft();
+      const newId = 'BLT-2026-00' + (state.blotters.length + 1);
+      state.blotters.unshift({
+        id: Date.now(),
+        blotter_id: newId,
+        complainant_name: comp,
+        respondent_name: resp,
+        incident_type: 'Pisikal na Pananakit',
+        incident_location: 'Barangay Sta. Ana, Pateros',
+        incident_datetime: new Date().toISOString(),
+        status: 'pending',
+        reported_at: new Date().toLocaleString(),
+        official_name: state.currentUser.full_name
+      });
+      alert(`Report created successfully! Case ID: ${newId}`);
+      navigateTo('staff-all-incident');
+    }
+
+    function renderCaptainPortal() {
+      return `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
+            <h2 class="text-xl font-bold font-heading text-slate-900">Captain's Executive Overview</h2>
+            <p class="text-xs text-slate-500">Real-time crime & dispute monitoring for Barangay Sta. Ana, Pateros</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs"><div class="text-xs text-slate-500">Total Cases</div><div class="text-2xl font-bold font-heading">${state.blotters.length}</div></div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs"><div class="text-xs text-slate-500">Under Investigation</div><div class="text-2xl font-bold text-indigo-600 font-heading">${state.blotters.filter(b=>b.status==='investigating').length}</div></div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs"><div class="text-xs text-slate-500">Resolution Rate</div><div class="text-2xl font-bold text-emerald-600 font-heading">67%</div></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKagawadPortal() {
+      return `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
+            <h2 class="text-xl font-bold font-heading text-slate-900">Kagawad Investigation & Mediation Desk</h2>
+            <p class="text-xs text-slate-500">Mediation hearings and case investigation notes</p>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                <tr>
+                  <th class="py-3 px-4">Blotter ID</th>
+                  <th class="py-3 px-4">Complainant</th>
+                  <th class="py-3 px-4">Respondent</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Dossier</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${state.blotters.map(b => `
+                  <tr>
+                    <td class="py-3 px-4 font-mono font-medium">${b.blotter_id}</td>
+                    <td class="py-3 px-4 font-semibold">${b.complainant_name}</td>
+                    <td class="py-3 px-4">${b.respondent_name}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold uppercase ${b.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${b.status}</span></td>
+                    <td class="py-3 px-4 text-right"><button onclick="openDossier('${b.blotter_id}')" class="text-indigo-600 font-semibold hover:underline">View Dossier</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize on page load
+    renderApp();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+export { ResidentPortal } from './ResidentPortal';

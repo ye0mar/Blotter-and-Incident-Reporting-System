@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captain Portal - Barangay Sta. Ana Executive Dashboard</title>
+  <link rel="icon" type="image/png" href="/santa-ana-logo.png">
+  <link rel="shortcut icon" type="image/png" href="/santa-ana-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./captain.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    h2, h3, .font-heading {
+      font-family: 'Fredoka', sans-serif !important;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="captain-portal antialiased min-h-screen bg-slate-50 text-slate-900">
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/santa-ana-logo.png" alt="Barangay Sta. Ana Seal" class="w-10 h-10 object-contain drop-shadow-sm">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">Office of the Punong Barangay</span>
+            <span class="text-xs text-slate-400">|</span>
+            <span class="text-xs font-medium text-slate-500">Pateros, Metro Manila</span>
+          </div>
+          <h1 class="text-base font-bold text-slate-800 leading-tight">Barangay Sta. Ana - Executive Governance Portal</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-slate-500 font-medium">Logged in: <span id="user-display-name" class="font-semibold text-slate-700">Barangay Captain</span></span>
+        <button onclick="window.print()" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition flex items-center gap-1.5 shadow-sm">
+          Print / Export PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Page Header & Period Selector -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+      <div>
+        <h2 class="text-2xl text-slate-900">Peace & Order Executive Overview</h2>
+        <p class="text-sm text-slate-600 mt-1">High-level situational awareness, docket status distribution, and Lupon resolution rates.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <label for="period-select" class="text-xs font-semibold text-slate-500">Reporting Range:</label>
+        <select id="period-select" class="text-xs font-semibold rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option>Current Month (November 2026)</option>
+          <option>Last Quarter (Q3 2026)</option>
+          <option>Year-to-Date (2026)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 5 KPI Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="captain-kpi-card kpi-total">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Filed</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <h3 class="text-3xl font-bold text-slate-900" id="cap-total">0</h3>
+          <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All Time</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Recorded incidents</p>
+      </div>
+
+      <div class="captain-kpi-card kpi-pending">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Intake</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <h3 class="text-3xl font-bold text-amber-600" id="cap-pending">0</h3>
+          <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Action Req.</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Awaiting summons</p>
+      </div>
+
+      <div class="captain-kpi-card kpi-investigating">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Investigating</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <h3 class="text-3xl font-bold text-indigo-600" id="cap-investigating">0</h3>
+          <span class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">In Hearing</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Active mediation</p>
+      </div>
+
+      <div class="captain-kpi-card kpi-settled">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Settled Cases</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <h3 class="text-3xl font-bold text-emerald-600" id="cap-resolved">0</h3>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Amicable</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Settlement rate</p>
+      </div>
+
+      <div class="captain-kpi-card kpi-archived">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Archived Cases</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <h3 class="text-3xl font-bold text-slate-600" id="cap-archived">0</h3>
+          <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">Closed</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Dormant records</p>
+      </div>
+    </div>
+
+    <!-- Analytics Breakdown & Recent Incidents -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="captain-chart-wrapper lg:col-span-1 space-y-4">
+        <h3 class="text-lg text-slate-900">Incident Distribution</h3>
+        <p class="text-xs text-slate-500">Breakdown by common neighborhood dispute categories.</p>
+        
+        <div class="space-y-3 pt-2">
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Neighborhood Noise / Altercation</span>
+              <span id="rate-dist-1">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-blue-600 rounded-full" id="bar-dist-1" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Property Boundary Dispute</span>
+              <span id="rate-dist-2">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-indigo-600 rounded-full" id="bar-dist-2" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Financial / Utang Non-payment</span>
+              <span id="rate-dist-3">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" id="bar-dist-3" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Physical Threats &amp; Harassment</span>
+              <span id="rate-dist-4">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-rose-500 rounded-full" id="bar-dist-4" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="captain-chart-wrapper lg:col-span-2">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg text-slate-900">Recent Priority Blotter Cases</h3>
+            <p class="text-xs text-slate-500">Dockets requiring executive certification or Lupon hearing supervision.</p>
+          </div>
+          <span class="text-xs font-semibold text-slate-500" id="captain-case-count">0 Cases</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3">Docket No.</th>
+                <th class="py-2.5 px-3">Complainant</th>
+                <th class="py-2.5 px-3">Respondent</th>
+                <th class="py-2.5 px-3">Incident Type</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="captain-all-body" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="6" class="py-8 text-center text-slate-400">Loading cases...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="./captain.js"></script>
+</body>
+</html>

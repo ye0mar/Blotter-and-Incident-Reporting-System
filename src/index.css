@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply antialiased bg-[#f8fafc] text-[#1E293B];
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  h2, h3, .font-heading, .font-stat {
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  h1 {
+    font-family: 'Fredoka', 'Nunito', 'Urbanist', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  nav, button, .font-nav, .font-btn, .font-ui {
+    font-family: 'Quicksand', 'Varela Round', 'Okta Neue', sans-serif;
+  }
+
+  th, .font-table-header {
+    font-family: 'Quicksand', 'Varela Round', sans-serif;
+    font-weight: 600;
+  }
+
+  label, .font-label {
+    font-family: 'Quicksand', 'Century Gothic', 'Poppins', sans-serif;
+  }
+
+  td, input, textarea, select, .font-body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+  }
+}
+
+/* Primary Pill Button matching "New Report +" and "Add New User" */
+.btn-primary-pill {
+  font-family: 'Quicksand', 'Varela Round', sans-serif;
+  font-weight: 600;
+  border-radius: 9999px;
+  background-color: #E0E7FF;
+  color: #3730A3;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.btn-primary-pill:hover {
+  background-color: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide dev server, main layout and floating widgets during print */
+  header,
+  nav,
+  main,
+  #app-main-layout,
+  .print-hidden,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Allow modal to flow naturally across pages */
+  #print-dossier-root {
+    position: static !important;
+    display: block !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  #print-dossier-card {
+    box-shadow: none !important;
+    border: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  @page {
+    margin: 15mm;
+    size: portrait;
+  }
+}

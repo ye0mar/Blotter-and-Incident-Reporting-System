@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Blotter and Incident Reporting System</title>
+  <link rel="icon" type="image/png" href="/santa-ana-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Urbanist:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3 { font-family: 'Urbanist', sans-serif; }
+    label { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+  
+  <div class="w-full max-w-xl bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 space-y-6">
+    
+    <!-- Header -->
+    <div class="text-center space-y-2">
+      <img src="/santa-ana-logo.png" alt="Barangay Logo" class="w-16 h-16 mx-auto object-contain" />
+      <h1 class="text-xl font-extrabold text-[#0d3461] tracking-tight uppercase">Blotter and Incident Reporting System</h1>
+      <p class="text-xs font-medium text-slate-500">Barangay Sta. Ana, Pateros</p>
+    </div>
+
+    <!-- Error/Success Message Box -->
+    <div id="message-box" class="hidden p-3 rounded-lg text-xs"></div>
+
+    <!-- Register Form -->
+    <form id="register-form" class="space-y-4">
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Full Name</label>
+          <input 
+            type="text" 
+            id="full_name" 
+            required 
+            placeholder="Juan Dela Cruz" 
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm text-slate-800 outline-none focus:border-blue-600 transition-colors bg-white font-normal"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            required 
+            placeholder="juandelacruz@gmail.com" 
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm text-slate-800 outline-none focus:border-blue-600 transition-colors bg-white font-normal"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            required 
+            placeholder="••••••••" 
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm text-slate-800 outline-none focus:border-blue-600 transition-colors bg-white font-normal"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Contact Number</label>
+          <input 
+            type="tel" 
+            id="phone" 
+            placeholder="09123456786" 
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm text-slate-800 outline-none focus:border-blue-600 transition-colors bg-white font-normal"
+          />
+        </div>
+      </div>
+
+      <input type="hidden" id="role" value="resident" />
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
+        <div>
+          <span class="text-xs font-semibold text-slate-700 block">Account Role</span>
+          <span class="text-[11px] text-slate-500">Public account registration is automatically assigned to Residents</span>
+        </div>
+        <span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase tracking-wide">
+          Resident
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Address</label>
+        <input 
+          type="text" 
+          id="address" 
+          placeholder="Alley 1, Sta. Ana, Pateros" 
+          class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm text-slate-800 outline-none focus:border-blue-600 transition-colors bg-white font-normal"
+        />
+      </div>
+
+      <button 
+        type="submit" 
+        class="w-full py-2.5 px-4 bg-[#0d3461] hover:bg-blue-900 text-white font-semibold text-xs sm:text-sm rounded-lg transition-colors shadow-sm tracking-wide mt-2"
+      >
+        Create Account
+      </button>
+    </form>
+
+    <!-- Sign In Link Footer -->
+    <div class="text-center pt-2 border-t border-slate-100 text-xs text-slate-600">
+      May account na? <a href="/login.html" class="text-blue-600 font-semibold hover:underline">Mag-sign in dito</a>
+    </div>
+
+  </div>
+
+  <script type="module" src="/register.js"></script>
+</body>
+</html>
