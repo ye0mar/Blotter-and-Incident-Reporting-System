@@ -64,7 +64,7 @@ interface AppContextType {
   setUserStatus: (userId: number, status: UserStatus) => void;
   updateUserRole: (userId: number, role: UserRole) => void;
   deleteUser: (userId: number) => void;
-  addUser: (userData: { full_name: string; email: string; role: UserRole; status: UserStatus; phone?: string; address?: string }) => void;
+  addUser: (userData: { full_name: string; email: string; role: UserRole; status: UserStatus; phone?: string; address?: string }) => { success: boolean; message: string };
 }
 
 const DEFAULT_SYSTEM_SETTINGS: SystemSettingsConfig = {
@@ -78,7 +78,7 @@ const DEFAULT_SYSTEM_SETTINGS: SystemSettingsConfig = {
 const INITIAL_NOTIFICATIONS: AppNotification[] = [];
 const INITIAL_ISSUE_REPORTS: IssueReport[] = [];
 
-const SCHEMA_CLEAN_KEY = 'blotter_schema_clean_v3';
+const SCHEMA_CLEAN_KEY = 'blotter_schema_clean_v4';
 
 function checkCleanStorage() {
   if (typeof window === 'undefined') return;
@@ -193,12 +193,62 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return;
     }
 
-    // Role-specific enforcement
-    const adminTabs = ['user-management', 'system-logs', 'backup-restore', 'troubleshooting', 'maintenance', 'issue-reports', 'admin-overview'];
-    const captainTabs = ['captain-dashboard', 'captain-registry', 'captain-archives', 'captain-reports'];
-    const kagawadTabs = ['kagawad-investigate', 'kagawad-cases', 'kagawad-hearings', 'kagawad-notes'];
-    const staffTabs = ['staff-dashboard', 'staff-intake', 'staff-registry', 'staff-schedules'];
-    const residentTabs = ['resident-home', 'resident-complaints', 'resident-file', 'resident-hearings'];
+    // Role-specific enforcement (includes all Header & Portal tabs per role)
+    const adminTabs = [
+      'user-management',
+      'issue-reports',
+      'system-overview',
+      'system-security',
+      'backup-recovery',
+      'system-monitoring',
+      'troubleshooting',
+      'maintenance-plan',
+      'system-logs',
+      'admin-overview',
+      'backup-restore',
+      'maintenance'
+    ];
+    const captainTabs = [
+      'captain-dashboard',
+      'dashboard',
+      'home',
+      'captain-analytics',
+      'captain-report',
+      'captain-registry',
+      'captain-archives',
+      'captain-reports'
+    ];
+    const kagawadTabs = [
+      'kagawad-investigate',
+      'kagawad-schedule',
+      'kagawad-cases',
+      'kagawad-hearings',
+      'kagawad-notes'
+    ];
+    const staffTabs = [
+      'staff-dashboard',
+      'dashboard',
+      'home',
+      'staff-create-report',
+      'staff-all-incident',
+      'staff-schedule',
+      'staff-intake',
+      'staff-registry',
+      'staff-schedules',
+      'all-incidents',
+      'create-report',
+      'schedules',
+      'schedule'
+    ];
+    const residentTabs = [
+      'resident-home',
+      'resident-complaints',
+      'resident-schedules',
+      'resident-incident-details',
+      'resident-report',
+      'resident-file',
+      'resident-hearings'
+    ];
 
     if (currentUser.role === 'admin' && adminTabs.includes(tab)) {
       setActiveTabRaw(tab);
@@ -259,15 +309,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [currentUser]);
 
   const logActivity = (action: string, details?: string) => {
-    const newLog: ActivityLog = {
-      id: activityLogs.length > 0 ? Math.max(...activityLogs.map(l => l.id)) + 1 : 1,
-      user_id: currentUser?.id,
-      user_name: currentUser?.full_name || 'System',
-      action,
-      details,
-      created_at: new Date().toLocaleString()
-    };
-    setActivityLogs(prev => [newLog, ...prev]);
+    setActivityLogs(prev => {
+      const newLog: ActivityLog = {
+        id: prev.length > 0 ? Math.max(...prev.map(l => l.id)) + 1 : 1,
+        user_id: currentUser?.id,
+        user_name: currentUser?.full_name || 'System',
+        action,
+        details,
+        created_at: new Date().toLocaleString()
+      };
+      return [newLog, ...prev];
+    });
   };
 
   const markNotificationRead = (id: number) => {
@@ -309,6 +361,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetUserPassword = (userId: number, newPassword: string = 'password123') => {
     const target = users.find(u => u.id === userId);
     if (!target) return { success: false, message: 'User not found.' };
+    setUsers(prev => prev.map(u => (u.id === userId ? { ...u, password: newPassword } : u)));
+    if (currentUser?.id === userId) {
+      setCurrentUser(prev => (prev ? { ...prev, password: newPassword } : null));
+    }
     logActivity('Password Reset', `Admin reset password for user: ${target.full_name}`);
     return { success: true, message: `Password for ${target.full_name} has been reset to: ${newPassword}` };
   };
@@ -327,15 +383,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: false, message: 'This account has been deactivated. Please contact the administrator.' };
     }
 
-    // Password verification: check official initial password or registered password
+    // Password verification: check updated user password first, then official initial password
     if (password !== undefined && password !== '') {
       const expectedOfficialPassword = INITIAL_OFFICIAL_PASSWORDS[cleanEmail];
-      if (expectedOfficialPassword) {
+      if (user.password) {
+        if (user.password !== password) {
+          return { success: false, message: 'Invalid password. Please check your credentials.' };
+        }
+      } else if (expectedOfficialPassword) {
         if (password !== expectedOfficialPassword) {
           return { success: false, message: 'Invalid password. Please check accounts.txt for authorized credentials.' };
         }
-      } else if (user.password && user.password !== password) {
-        return { success: false, message: 'Invalid password. Please check your credentials.' };
       }
     }
 
@@ -418,8 +476,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     logActivity('Profile Updated', `${currentUser.full_name} updated profile details`);
   };
 
-  const changePassword = (_oldPwd: string, _newPwd: string) => {
-    logActivity('Password Changed', `${currentUser?.full_name} updated their password`);
+  const changePassword = (oldPwd: string, newPwd: string) => {
+    if (!currentUser) return { success: false, message: 'No active user session.' };
+    const cleanEmail = currentUser.email.toLowerCase();
+    const expectedPwd = currentUser.password || INITIAL_OFFICIAL_PASSWORDS[cleanEmail];
+    if (expectedPwd && oldPwd !== expectedPwd) {
+      return { success: false, message: 'Current password is incorrect.' };
+    }
+    const updatedUser: User = { ...currentUser, password: newPwd };
+    setCurrentUser(updatedUser);
+    setUsers(prev => prev.map(u => (u.id === currentUser.id ? updatedUser : u)));
+    logActivity('Password Changed', `${currentUser.full_name} updated their password`);
     return { success: true, message: 'Password successfully changed.' };
   };
 
@@ -446,8 +513,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const clearDatabaseData = () => {
     setBlotters([]);
     setSchedules([]);
-    setActivityLogs([]);
-    logActivity('Database Cleared', 'Admin purged all incident and schedule records');
+    setActivityLogs([
+      {
+        id: 1,
+        user_id: currentUser?.id,
+        user_name: currentUser?.full_name || 'System',
+        action: 'Database Cleared',
+        details: 'Admin purged all incident and schedule records',
+        created_at: new Date().toLocaleString()
+      }
+    ]);
   };
 
   // Blotter Actions
@@ -680,13 +755,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addUser = (data: { full_name: string; email: string; role: UserRole; status: UserStatus; phone?: string; address?: string }) => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    if (users.some(u => u.email.toLowerCase() === cleanEmail)) {
+      return { success: false, message: 'An account with this email address already exists.' };
+    }
     const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
     const userId = `U${String(newId).padStart(3, '0')}`;
     const newUser: User = {
       id: newId,
       user_id: userId,
       full_name: data.full_name,
-      email: data.email,
+      email: data.email.trim(),
+      password: 'User#2026!',
       role: data.role,
       status: data.status,
       phone: data.phone,
@@ -695,6 +775,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setUsers(prev => [...prev, newUser]);
     logActivity('User Created', `Admin created user account for ${newUser.full_name} (${newUser.role})`);
+    return { success: true, message: `Account created for ${newUser.full_name}. Initial password: User#2026!` };
   };
 
   return (

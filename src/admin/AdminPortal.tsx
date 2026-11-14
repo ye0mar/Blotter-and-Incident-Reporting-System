@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { User, UserRole } from '../types';
+import { UserRole } from '../types';
 import { exportCapstoneSystemAdminReport } from '../utils/reportExporter';
 import { 
-  Users, 
   Settings, 
   Database, 
   Search, 
@@ -20,26 +19,78 @@ import {
   Activity,
   Server,
   FileText,
-  Wrench,
   RotateCcw,
   Cpu,
   HardDrive,
   Globe,
-  Lock,
-  Calendar,
-  ClipboardList
+  Lock
 } from 'lucide-react';
+
+interface TroubleshootLogItem {
+  id: number;
+  problem: string;
+  cause: string;
+  solution: string;
+  result: string;
+  date: string;
+}
+
+interface MaintenanceTaskItem {
+  id: number;
+  freq: string;
+  task: string;
+  status: string;
+  completedAt: string;
+}
+
+const DEFAULT_TROUBLESHOOTING_LOGS: TroubleshootLogItem[] = [
+  {
+    id: 1,
+    problem: 'High Database Query Latency during Peak Reporting Hours',
+    cause: 'Unindexed full table search scans on complainant queries',
+    solution: 'Applied in-memory indexing, cached frequent queries, and optimized payload filters',
+    result: 'Query latency reduced from 1,200ms to 45ms (Resolved)',
+    date: '2026-10-25'
+  },
+  {
+    id: 2,
+    problem: 'Session Expiration Disconnection during Extended Mediation Hearings',
+    cause: 'Strict 15-minute token TTL without background heartbeat',
+    solution: 'Implemented sliding session auto-renewal on user activity',
+    result: 'Zero session drops reported during active hearings (Resolved)',
+    date: '2026-10-27'
+  },
+  {
+    id: 3,
+    problem: 'File Upload Overhead on Mobile Field Devices',
+    cause: 'Uncompressed raw photo attachments in incident dossiers',
+    solution: 'Added client-side canvas compression before image submission',
+    result: 'Payload size reduced by 75% with immediate upload speed improvement (Resolved)',
+    date: '2026-10-29'
+  }
+];
+
+const DEFAULT_MAINTENANCE_TASKS: MaintenanceTaskItem[] = [
+  { id: 1, freq: 'Daily / Weekly', task: 'Monitor system server status, live CPU/RAM usage, and web server pulse', status: 'Completed', completedAt: 'Today, 8:00 AM' },
+  { id: 2, freq: 'Daily / Weekly', task: 'Check disk storage space and active database memory buffer', status: 'Completed', completedAt: 'Today, 8:05 AM' },
+  { id: 3, freq: 'Weekly', task: 'Execute JSON database backup snapshot and store in cloud repository', status: 'Completed', completedAt: 'Nov 1, 2026' },
+  { id: 4, freq: 'Weekly', task: 'Review user login activity logs and access permission records', status: 'Completed', completedAt: 'Nov 1, 2026' },
+  { id: 5, freq: 'Monthly', task: 'Apply security patches, dependency updates, and password policy audits', status: 'Completed', completedAt: 'Oct 28, 2026' },
+  { id: 6, freq: 'Monthly', task: 'Test backup recovery simulation and verify data integrity checksum', status: 'Completed', completedAt: 'Oct 28, 2026' },
+  { id: 7, freq: 'As Needed', task: 'Optimize database indexes and clear temporary cached assets', status: 'Completed', completedAt: 'Oct 20, 2026' }
+];
 
 export const AdminPortal: React.FC = () => {
   const { 
+    currentUser,
     users, 
     blotters, 
     schedules,
     setUserStatus, 
+    updateUserRole,
     deleteUser, 
     addUser,
     activeTab,
-    setActiveTab,
     systemSettings,
     updateSystemSettings,
     createDatabaseBackup,
@@ -60,7 +111,9 @@ export const AdminPortal: React.FC = () => {
   const [newUserRole, setNewUserRole] = useState<UserRole>('resident');
   const [newUserPhone, setNewUserPhone] = useState('');
   const [newUserAddress, setNewUserAddress] = useState('');
+  const [addUserError, setAddUserError] = useState<string | null>(null);
   const [resetMsg, setResetMsg] = useState<string | null>(null);
+  const [confirmDeleteUserId, setConfirmDeleteUserId] = useState<number | null>(null);
 
   // Settings local state for saving
   const [emailNotif, setEmailNotif] = useState(systemSettings.emailNotification);
@@ -68,7 +121,16 @@ export const AdminPortal: React.FC = () => {
   const [maintMode, setMaintMode] = useState(systemSettings.maintenanceMode);
   const [archivePeriod, setArchivePeriod] = useState(systemSettings.autoArchivePeriod);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [confirmClearData, setConfirmClearData] = useState(false);
+  const [dataClearedMsg, setDataClearedMsg] = useState(false);
   const [previewScreenshot, setPreviewScreenshot] = useState<string | null>(null);
+
+  useEffect(() => {
+    setEmailNotif(systemSettings.emailNotification);
+    setRequireAppr(systemSettings.requireApproval);
+    setMaintMode(systemSettings.maintenanceMode);
+    setArchivePeriod(systemSettings.autoArchivePeriod);
+  }, [systemSettings]);
 
   // System Administration Custom State
   const [isExportingCapstonePdf, setIsExportingCapstonePdf] = useState(false);
@@ -83,33 +145,20 @@ export const AdminPortal: React.FC = () => {
   const [dbLatency, setDbLatency] = useState(12);
   const [isRefreshingMetrics, setIsRefreshingMetrics] = useState(false);
 
-  // Troubleshooting Log State
-  const [troubleshootingLogs, setTroubleshootingLogs] = useState([
-    {
-      id: 1,
-      problem: 'High Database Query Latency during Peak Reporting Hours',
-      cause: 'Unindexed full table search scans on complainant queries',
-      solution: 'Applied in-memory indexing, cached frequent queries, and optimized payload filters',
-      result: 'Query latency reduced from 1,200ms to 45ms (Resolved)',
-      date: '2026-10-25'
-    },
-    {
-      id: 2,
-      problem: 'Session Expiration Disconnection during Extended Mediation Hearings',
-      cause: 'Strict 15-minute token TTL without background heartbeat',
-      solution: 'Implemented sliding session auto-renewal on user activity',
-      result: 'Zero session drops reported during active hearings (Resolved)',
-      date: '2026-10-27'
-    },
-    {
-      id: 3,
-      problem: 'File Upload Overhead on Mobile Field Devices',
-      cause: 'Uncompressed raw photo attachments in incident dossiers',
-      solution: 'Added client-side canvas compression before image submission',
-      result: 'Payload size reduced by 75% with immediate upload speed improvement (Resolved)',
-      date: '2026-10-29'
+  // Troubleshooting Log State (persisted)
+  const [troubleshootingLogs, setTroubleshootingLogs] = useState<TroubleshootLogItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('blotter_troubleshooting_logs');
+      if (saved) return JSON.parse(saved) as TroubleshootLogItem[];
+    } catch {
+      // ignore storage parse error
     }
-  ]);
+    return DEFAULT_TROUBLESHOOTING_LOGS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('blotter_troubleshooting_logs', JSON.stringify(troubleshootingLogs));
+  }, [troubleshootingLogs]);
 
   const [isAddTroubleshootOpen, setIsAddTroubleshootOpen] = useState(false);
   const [newProblem, setNewProblem] = useState('');
@@ -117,22 +166,20 @@ export const AdminPortal: React.FC = () => {
   const [newSolution, setNewSolution] = useState('');
   const [newResult, setNewResult] = useState('');
 
-  // Maintenance Checklist State
-  const [maintenanceTasks, setMaintenanceTasks] = useState([
-    { id: 1, freq: 'Daily / Weekly', task: 'Monitor system server status, live CPU/RAM usage, and web server pulse', status: 'Completed', completedAt: 'Today, 8:00 AM' },
-    { id: 2, freq: 'Daily / Weekly', task: 'Check disk storage space and active database memory buffer', status: 'Completed', completedAt: 'Today, 8:05 AM' },
-    { id: 3, freq: 'Weekly', task: 'Execute JSON database backup snapshot and store in cloud repository', status: 'Completed', completedAt: 'Nov 1, 2026' },
-    { id: 4, freq: 'Weekly', task: 'Review user login activity logs and access permission records', status: 'Completed', completedAt: 'Nov 1, 2026' },
-    { id: 5, freq: 'Monthly', task: 'Apply security patches, dependency updates, and password policy audits', status: 'Completed', completedAt: 'Oct 28, 2026' },
-    { id: 6, freq: 'Monthly', task: 'Test backup recovery simulation and verify data integrity checksum', status: 'Completed', completedAt: 'Oct 28, 2026' },
-    { id: 7, freq: 'As Needed', task: 'Optimize database indexes and clear temporary cached assets', status: 'Completed', completedAt: 'Oct 20, 2026' }
-  ]);
+  // Maintenance Checklist State (persisted)
+  const [maintenanceTasks, setMaintenanceTasks] = useState<MaintenanceTaskItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('blotter_maintenance_tasks');
+      if (saved) return JSON.parse(saved) as MaintenanceTaskItem[];
+    } catch {
+      // ignore storage parse error
+    }
+    return DEFAULT_MAINTENANCE_TASKS;
+  });
 
-  // Stats calculation
-  const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.status === 'active').length;
-  const totalIncidents = blotters.length;
-  const totalIssues = issueReports.length;
+  useEffect(() => {
+    localStorage.setItem('blotter_maintenance_tasks', JSON.stringify(maintenanceTasks));
+  }, [maintenanceTasks]);
 
   // Filtered users
   const filteredUsers = users.filter(u => {
@@ -158,7 +205,8 @@ export const AdminPortal: React.FC = () => {
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUserName.trim() || !newUserEmail.trim()) return;
-    addUser({
+    setAddUserError(null);
+    const res = addUser({
       full_name: newUserName.trim(),
       email: newUserEmail.trim(),
       role: newUserRole,
@@ -166,6 +214,12 @@ export const AdminPortal: React.FC = () => {
       phone: newUserPhone.trim(),
       address: newUserAddress.trim()
     });
+    if (!res.success) {
+      setAddUserError(res.message);
+      return;
+    }
+    setResetMsg(res.message);
+    setTimeout(() => setResetMsg(null), 5000);
     setIsAddUserOpen(false);
     setNewUserName('');
     setNewUserEmail('');
@@ -260,7 +314,10 @@ export const AdminPortal: React.FC = () => {
             </div>
             
             <button
-              onClick={() => setIsAddUserOpen(true)}
+              onClick={() => {
+                setAddUserError(null);
+                setIsAddUserOpen(true);
+              }}
               className="bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all shadow-xs hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2 self-start sm:self-auto"
               style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}
             >
@@ -268,6 +325,23 @@ export const AdminPortal: React.FC = () => {
               <span>Add New User</span>
             </button>
           </div>
+
+          {resetMsg && (
+            <div className="mx-6 mt-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-medium flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{resetMsg}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setResetMsg(null)}
+                className="text-emerald-600 hover:text-emerald-800 p-1 cursor-pointer"
+                aria-label="Dismiss message"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           <div className="px-6 py-4 bg-[#F8FAFC] border-b border-slate-100 flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -329,23 +403,51 @@ export const AdminPortal: React.FC = () => {
                         {user.email}
                       </td>
                       <td className="py-4 px-6 text-center whitespace-nowrap">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
-                          user.role === 'admin' 
-                            ? 'bg-[#E0E7FF] text-[#3730A3]' 
-                            : user.role === 'captain'
-                            ? 'bg-[#C4B5FD] text-[#4C1D95]'
-                            : user.role === 'staff' || user.role === 'kagawad'
-                            ? 'bg-slate-100 text-slate-700'
-                            : 'bg-slate-100 text-[#475569]'
-                        }`} style={{ fontFamily: "'Poppins', sans-serif" }}>
-                          {user.role}
-                        </span>
+                        <select
+                          value={user.role}
+                          disabled={currentUser?.id === user.id}
+                          onChange={e => {
+                            const nextRole = e.target.value as UserRole;
+                            updateUserRole(user.id, nextRole);
+                            setResetMsg(`Updated ${user.full_name}'s role to ${nextRole}.`);
+                            setTimeout(() => setResetMsg(null), 3500);
+                          }}
+                          title={currentUser?.id === user.id ? 'Cannot change your own active role' : 'Change user role'}
+                          className={`px-3 py-1 rounded-full text-xs font-semibold capitalize border border-transparent focus:border-[#6366F1] focus:outline-none ${
+                            user.role === 'admin' 
+                              ? 'bg-[#E0E7FF] text-[#3730A3]' 
+                              : user.role === 'captain'
+                              ? 'bg-[#C4B5FD] text-[#4C1D95]'
+                              : user.role === 'staff' || user.role === 'kagawad'
+                              ? 'bg-slate-100 text-slate-700'
+                              : 'bg-slate-100 text-[#475569]'
+                          } ${currentUser?.id === user.id ? 'opacity-80 cursor-not-allowed' : 'cursor-pointer'}`}
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
+                        >
+                          <option value="admin">admin</option>
+                          <option value="captain">captain</option>
+                          <option value="kagawad">kagawad</option>
+                          <option value="staff">staff</option>
+                          <option value="resident">resident</option>
+                        </select>
                       </td>
                       <td className="py-4 px-6 text-center whitespace-nowrap">
                         {user.status === 'active' ? (
-                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#D1FAE5] text-[#065F46]" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                            active
-                          </span>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#D1FAE5] text-[#065F46]" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                              active
+                            </span>
+                            {currentUser?.id !== user.id && (
+                              <button
+                                onClick={() => setUserStatus(user.id, 'inactive')}
+                                className="px-2.5 py-1 bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-700 text-[11px] font-semibold rounded-full cursor-pointer transition-colors"
+                                style={{ fontFamily: "'Quicksand', sans-serif" }}
+                                title="Deactivate user"
+                              >
+                                Deactivate
+                              </button>
+                            )}
+                          </div>
                         ) : user.status === 'pending' ? (
                           <div className="flex items-center justify-center gap-2">
                             <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#FEF3C7] text-[#92400E]" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -360,9 +462,19 @@ export const AdminPortal: React.FC = () => {
                             </button>
                           </div>
                         ) : (
-                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#FFE4E6] text-[#9F1239]" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                            inactive
-                          </span>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#FFE4E6] text-[#9F1239]" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                              inactive
+                            </span>
+                            <button
+                              onClick={() => setUserStatus(user.id, 'active')}
+                              className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[11px] font-semibold rounded-full cursor-pointer transition-colors"
+                              style={{ fontFamily: "'Quicksand', sans-serif" }}
+                              title="Activate user"
+                            >
+                              Activate
+                            </button>
+                          </div>
                         )}
                       </td>
                       <td className="py-4 px-6 text-[#64748B] whitespace-nowrap text-xs" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -378,13 +490,37 @@ export const AdminPortal: React.FC = () => {
                           <Key className="w-3.5 h-3.5 text-[#6366F1]" />
                           <span>Reset Password</span>
                         </button>
-                        <button
-                          onClick={() => deleteUser(user.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-full hover:bg-rose-50 transition-colors cursor-pointer"
-                          title="Delete User"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {currentUser?.id !== user.id && (
+                          confirmDeleteUserId === user.id ? (
+                            <span className="inline-flex items-center gap-1 ml-1">
+                              <button
+                                onClick={() => {
+                                  deleteUser(user.id);
+                                  setConfirmDeleteUserId(null);
+                                  setResetMsg(`Deleted user account: ${user.full_name}`);
+                                  setTimeout(() => setResetMsg(null), 3500);
+                                }}
+                                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold rounded-full cursor-pointer"
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => setConfirmDeleteUserId(null)}
+                                className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-full cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmDeleteUserId(user.id)}
+                              className="p-1.5 text-slate-400 hover:text-rose-600 rounded-full hover:bg-rose-50 transition-colors cursor-pointer"
+                              title="Delete User"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )
+                        )}
                       </td>
                     </tr>
                   ))
@@ -690,7 +826,30 @@ export const AdminPortal: React.FC = () => {
             </div>
 
             <div className="space-y-3.5">
-              {/* Option 1: Require Approval */}
+              {/* Option 1: Email Notifications */}
+              <div className="p-4 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between transition-colors">
+                <div>
+                  <div className="font-semibold text-[#1E293B] text-xs sm:text-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>Email Notifications</div>
+                  <div className="text-xs text-[#64748B] mt-0.5" style={{ fontFamily: "'Poppins', sans-serif" }}>Send automated email alerts for new blotters and hearing updates</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEmailNotif(!emailNotif)}
+                  className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    emailNotif ? 'bg-[#6366F1]' : 'bg-slate-200'
+                  }`}
+                  role="switch"
+                  aria-checked={emailNotif}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      emailNotif ? 'translate-x-6' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Option 2: Require Approval */}
               <div className="p-4 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between transition-colors">
                 <div>
                   <div className="font-semibold text-[#1E293B] text-xs sm:text-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>Require Approval</div>
@@ -757,6 +916,13 @@ export const AdminPortal: React.FC = () => {
               </div>
             </div>
 
+            {savedSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-semibold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>System configuration settings saved successfully!</span>
+              </div>
+            )}
+
             <button
               onClick={handleSaveSettings}
               className="bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs sm:text-sm px-6 py-3 rounded-full transition-all shadow-xs hover:-translate-y-0.5 cursor-pointer w-full flex items-center justify-center gap-2"
@@ -794,21 +960,55 @@ export const AdminPortal: React.FC = () => {
                 <p className="text-xs text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>Download full database snapshot as JSON file</p>
               </button>
 
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to clear all blotter data? This cannot be undone.')) {
-                    clearDatabaseData();
-                  }
-                }}
-                className="p-5 rounded-2xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 text-left transition-all space-y-2 cursor-pointer"
-              >
-                <div className="flex items-center gap-2 text-rose-700 font-bold text-xs sm:text-sm" style={{ fontFamily: "'Quicksand', sans-serif" }}>
-                  <Trash2 className="w-4 h-4" />
-                  <span>Clear All Data</span>
+              {confirmClearData ? (
+                <div className="p-5 rounded-2xl border border-rose-300 bg-rose-50 text-left space-y-3">
+                  <div className="flex items-center gap-2 text-rose-800 font-bold text-xs sm:text-sm" style={{ fontFamily: "'Quicksand', sans-serif" }}>
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>Confirm Permanent Reset?</span>
+                  </div>
+                  <p className="text-xs text-rose-700" style={{ fontFamily: "'Poppins', sans-serif" }}>All blotters and schedules will be permanently erased.</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        clearDatabaseData();
+                        setConfirmClearData(false);
+                        setDataClearedMsg(true);
+                        setTimeout(() => setDataClearedMsg(false), 4000);
+                      }}
+                      className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-full cursor-pointer"
+                    >
+                      Yes, Clear All Data
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmClearData(false)}
+                      className="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-                <p className="text-xs text-rose-600/80" style={{ fontFamily: "'Poppins', sans-serif" }}>Reset database and erase all records permanently</p>
-              </button>
+              ) : (
+                <button
+                  onClick={() => setConfirmClearData(true)}
+                  className="p-5 rounded-2xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 text-left transition-all space-y-2 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 text-rose-700 font-bold text-xs sm:text-sm" style={{ fontFamily: "'Quicksand', sans-serif" }}>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Clear All Data</span>
+                  </div>
+                  <p className="text-xs text-rose-600/80" style={{ fontFamily: "'Poppins', sans-serif" }}>Reset database and erase all records permanently</p>
+                </button>
+              )}
             </div>
+
+            {dataClearedMsg && (
+              <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm font-semibold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>All blotter and schedule records have been cleared.</span>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -1021,15 +1221,23 @@ export const AdminPortal: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {activityLogs.map(log => (
-                  <tr key={log.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-3 text-slate-500 whitespace-nowrap">{log.created_at}</td>
-                    <td className="p-3 font-semibold text-slate-800">{log.user_name || 'System'}</td>
-                    <td className="p-3 font-bold text-[#3730A3]">{log.action}</td>
-                    <td className="p-3 text-slate-600">{log.details || 'System operation executed'}</td>
-                    <td className="p-3 text-center font-bold text-emerald-700">SUCCESS</td>
+                {activityLogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-slate-500">
+                      No activity audit logs recorded yet.
+                    </td>
                   </tr>
-                ))}
+                ) : (
+                  activityLogs.map(log => (
+                    <tr key={log.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="p-3 text-slate-500 whitespace-nowrap">{log.created_at}</td>
+                      <td className="p-3 font-semibold text-slate-800">{log.user_name || 'System'}</td>
+                      <td className="p-3 font-bold text-[#3730A3]">{log.action}</td>
+                      <td className="p-3 text-slate-600">{log.details || 'System operation executed'}</td>
+                      <td className="p-3 text-center font-bold text-emerald-700">SUCCESS</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -1122,6 +1330,12 @@ export const AdminPortal: React.FC = () => {
               <h3 className="text-xl font-bold text-[#1E293B]" style={{ fontFamily: "'Fredoka', sans-serif" }}>Add New System User</h3>
               <p className="text-xs text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>Fill in the details to create a new user account</p>
             </div>
+
+            {addUserError && (
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                {addUserError}
+              </div>
+            )}
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
