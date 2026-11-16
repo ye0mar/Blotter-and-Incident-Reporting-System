@@ -27,11 +27,13 @@ import {
 export const StaffPortal: React.FC = () => {
   const { 
     currentUser, 
+    users,
     blotters, 
     schedules, 
     addBlotter, 
     updateBlotterStatus, 
     archiveBlotter,
+    assignBlotter,
     addBlotterNote, 
     deleteBlotter, 
     addSchedule,
@@ -46,10 +48,10 @@ export const StaffPortal: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
 
-  // Edit / Investigation Modal State
+  // Assign to Kagawad Modal State
   const [editingBlotter, setEditingBlotter] = useState<BlotterRecord | null>(null);
-  const [modalStatus, setModalStatus] = useState<BlotterStatus>('investigating');
-  const [modalNotes, setModalNotes] = useState('');
+  const [selectedKagawadId, setSelectedKagawadId] = useState<number | ''>('');
+  const [assignNotes, setAssignNotes] = useState('');
 
   // ----------------------------------------------------
   // SCHEDULE MODAL STATE (FOR STAFF SCHEDULE TAB)
@@ -233,20 +235,20 @@ export const StaffPortal: React.FC = () => {
 
   const handleOpenEdit = (b: BlotterRecord) => {
     setEditingBlotter(b);
-    setModalStatus(b.status);
-    setModalNotes(b.notes && b.notes.length > 0 ? b.notes[b.notes.length - 1].notes : '');
+    setSelectedKagawadId(b.assigned_to || '');
+    setAssignNotes(b.notes && b.notes.length > 0 ? b.notes[b.notes.length - 1].notes : '');
   };
 
   const handleSaveModal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingBlotter) return;
 
-    if (modalStatus !== editingBlotter.status) {
-      updateBlotterStatus(editingBlotter.id, modalStatus);
+    if (selectedKagawadId !== '') {
+      assignBlotter(editingBlotter.id, Number(selectedKagawadId));
     }
 
-    if (modalNotes.trim()) {
-      addBlotterNote(editingBlotter.id, modalNotes.trim());
+    if (assignNotes.trim()) {
+      addBlotterNote(editingBlotter.id, assignNotes.trim());
     }
 
     setEditingBlotter(null);
@@ -1220,20 +1222,21 @@ export const StaffPortal: React.FC = () => {
         </div>
       )}
 
-      {/* Edit / Update Case Modal */}
+      {/* Assign to Kagawad Modal */}
       {editingBlotter && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-[24px] max-w-lg w-full p-6 sm:p-8 shadow-2xl relative space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <button
+              type="button"
               onClick={() => setEditingBlotter(null)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 rounded-full p-1"
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 rounded-full p-1 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-[#1E293B]" style={{ fontFamily: "'Fredoka', sans-serif" }}>
-                Update Blotter Case: {editingBlotter.blotter_id}
+                Assign Case to Kagawad: {editingBlotter.blotter_id}
               </h3>
               <p className="text-xs text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 Complainant: {editingBlotter.complainant_name} vs {editingBlotter.respondent_name}
@@ -1243,30 +1246,34 @@ export const StaffPortal: React.FC = () => {
             <form onSubmit={handleSaveModal} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#1E293B] mb-1" style={{ fontFamily: "'Quicksand', sans-serif" }}>
-                  Case Status
+                  Assign to Barangay Kagawad
                 </label>
                 <select
-                  value={modalStatus}
-                  onChange={e => setModalStatus(e.target.value as BlotterStatus)}
+                  value={selectedKagawadId}
+                  onChange={e => setSelectedKagawadId(e.target.value ? Number(e.target.value) : '')}
+                  required
                   className="w-full px-4 py-2.5 text-xs sm:text-sm border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#6366F1] bg-white text-[#334155] font-medium cursor-pointer"
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
-                  <option value="pending">Pending</option>
-                  <option value="investigating">Investigating</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="archived">Archived</option>
+                  <option value="">-- Select Barangay Kagawad --</option>
+                  {users.filter(u => u.role === 'kagawad').map(k => (
+                    <option key={k.id} value={k.id}>
+                      {k.full_name} ({k.email})
+                    </option>
+                  ))}
                 </select>
+                <p className="text-[11px] text-slate-500 mt-1">Assigning this report will route it to the selected Kagawad for investigation and status updates.</p>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-[#1E293B] mb-1" style={{ fontFamily: "'Quicksand', sans-serif" }}>
-                  Official Case Note / Affidavit Summary
+                  Assignment Notes / Instructions
                 </label>
                 <textarea
-                  rows={4}
-                  value={modalNotes}
-                  onChange={e => setModalNotes(e.target.value)}
-                  placeholder="Isulat dito ang mga panibagong tala o kasunduan sa kaso..."
+                  rows={3}
+                  value={assignNotes}
+                  onChange={e => setAssignNotes(e.target.value)}
+                  placeholder="Maglagay ng tagubilin o tala para sa kagawad..."
                   className="w-full px-4 py-2.5 text-xs sm:text-sm border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#6366F1] text-[#334155]"
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 />
@@ -1276,17 +1283,17 @@ export const StaffPortal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setEditingBlotter(null)}
-                  className="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 text-xs sm:text-sm font-semibold rounded-full hover:bg-slate-50 transition-colors"
+                  className="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 text-xs sm:text-sm font-semibold rounded-full hover:bg-slate-50 transition-colors cursor-pointer"
                   style={{ fontFamily: "'Quicksand', sans-serif" }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] text-xs sm:text-sm font-semibold rounded-full shadow-xs transition-colors"
+                  className="px-6 py-2.5 bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] text-xs sm:text-sm font-semibold rounded-full shadow-xs transition-colors cursor-pointer"
                   style={{ fontFamily: "'Quicksand', sans-serif" }}
                 >
-                  Save Changes
+                  Assign Case
                 </button>
               </div>
             </form>
