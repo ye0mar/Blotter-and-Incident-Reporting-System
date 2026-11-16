@@ -344,8 +344,7 @@ export const ResidentPortal: React.FC = () => {
     const allTypes = [...selectedIncidentTypes];
     if (otherIncidentType.trim()) allTypes.push(otherIncidentType.trim());
 
-    const allActions = [...selectedActions];
-    if (otherAction.trim()) allActions.push(otherAction.trim());
+    const allActions = ['Iskedyul ng Mediasyon'];
 
     const newRecord = addBlotter({
       complainant_id: currentUser?.id || 4,
@@ -1319,50 +1318,7 @@ export const ResidentPortal: React.FC = () => {
                     />
                   </div>
 
-                  {/* Section: AKSYONG ISINAGAWA NG MGA OPISYAL NG BARANGAY */}
-                  <div className="pt-2">
-                    <div className="font-bold text-xs sm:text-sm text-[#1e293b] border-b border-[#e2e8f0] pb-1.5 mb-3.5 tracking-wide">
-                      AKSYONG ISINAGAWA NG MGA OPISYAL NG BARANGAY
-                    </div>
-                    <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-[#334155]">
-                      {[
-                        'Iskedyul ng Mediasyon',
-                        'Inirefer sa Pulisya',
-                        'Inirefer sa DSWD',
-                        'Nagbigay ng Babala'
-                      ].map(act => (
-                        <label key={act} className="inline-flex items-center gap-2 cursor-pointer select-none">
-                          <input 
-                            type="checkbox"
-                            checked={selectedActions.includes(act)}
-                            onChange={() => toggleAction(act)}
-                            className="accent-[#2563eb] w-4 h-4 rounded"
-                          />
-                          <span>{act}</span>
-                        </label>
-                      ))}
 
-                      <label className="inline-flex items-center gap-2 cursor-pointer select-none pt-0.5">
-                        <input 
-                          type="checkbox"
-                          checked={otherAction.length > 0}
-                          onChange={() => {
-                            if (otherAction.length > 0) setOtherAction('');
-                            else setOtherAction('Iba pa');
-                          }}
-                          className="accent-[#2563eb] w-4 h-4 rounded"
-                        />
-                        <span>Iba pa:</span>
-                        <input 
-                          type="text"
-                          placeholder="Ilagay dito"
-                          value={otherAction}
-                          onChange={e => setOtherAction(e.target.value)}
-                          className="ml-1 px-2.5 py-1 rounded border border-[#cbd5e1] text-xs sm:text-sm outline-none w-56"
-                        />
-                      </label>
-                    </div>
-                  </div>
 
                   {/* Step 2 Actions */}
                   <div className="flex justify-between items-center pt-4 border-t border-[#e2e8f0]">
