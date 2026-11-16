@@ -962,7 +962,7 @@ export const StaffPortal: React.FC = () => {
                       title="View Document Preview"
                     >
                       <Eye className="w-4 h-4 text-[#3730A3]" />
-                      <span>View &amp; Print Preview</span>
+                      <span>View</span>
                     </button>
                     <button
                       type="button"

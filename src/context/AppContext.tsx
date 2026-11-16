@@ -10,6 +10,7 @@ export interface AppNotification {
   read: boolean;
   blotter_id?: string;
   target_role?: string;
+  user_id?: number;
 }
 
 interface AppContextType {
@@ -600,7 +601,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       timestamp: 'Just now',
       read: false,
       blotter_id: targetBlotterId,
-      target_role: 'resident'
+      target_role: 'resident',
+      user_id: target.complainant_id || undefined
     };
     setNotifications(prev => [residentNotif, ...prev]);
     return true;
@@ -704,15 +706,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSchedules(prev => [newSched, ...prev]);
     logActivity('Hearing Scheduled', `New hearing scheduled for Case #${newSched.blotter_id}`);
 
+    const matchingBlotter = blotters.find(b => b.id === newSched.blotter_record_id || b.blotter_id === newSched.blotter_id);
+
     // Notification for resident
     const schedNotif: AppNotification = {
       id: Date.now(),
       title: 'Hearing Scheduled',
-      message: `Hearing scheduled for case #${newSched.blotter_id} on ${new Date(newSched.schedule_date).toLocaleString()}.`,
+      message: `Hearing scheduled for your case #${newSched.blotter_id} on ${new Date(newSched.schedule_date).toLocaleString()}.`,
       timestamp: 'Just now',
       read: false,
       blotter_id: newSched.blotter_id,
-      target_role: 'resident'
+      target_role: 'resident',
+      user_id: matchingBlotter?.complainant_id || undefined
     };
     setNotifications(prev => [schedNotif, ...prev]);
   };

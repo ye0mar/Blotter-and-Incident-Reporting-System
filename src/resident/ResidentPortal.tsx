@@ -1514,7 +1514,7 @@ export const ResidentPortal: React.FC = () => {
                         title="View Document Preview"
                       >
                         <Eye className="w-4 h-4 text-[#1E3A8A]" />
-                        <span>View &amp; Print Preview</span>
+                        <span>View</span>
                       </button>
                       <button
                         type="button"

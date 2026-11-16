@@ -10,7 +10,8 @@ export const Header: React.FC = () => {
     setActiveTab, 
     notifications, 
     markNotificationRead, 
-    clearAllNotifications 
+    clearAllNotifications,
+    blotters
   } = useApp();
 
   const [notifOpen, setNotifOpen] = useState(false);
@@ -19,10 +20,26 @@ export const Header: React.FC = () => {
   const notifRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
 
-  // Role-based notifications filtering
+  // Role-based notifications filtering ensuring residents ONLY see their own complaint notifications
   const userNotifications = notifications.filter(n => {
     if (!currentUser) return false;
     if (n.target_role === 'all') return true;
+
+    if (currentUser.role === 'resident') {
+      if (n.target_role !== 'resident') return false;
+      if (n.user_id && n.user_id !== currentUser.id) return false;
+      if (n.blotter_id) {
+        const relatedBlotter = blotters.find(b => b.blotter_id === n.blotter_id);
+        if (relatedBlotter) {
+          const isOwn = 
+            (relatedBlotter.complainant_id && relatedBlotter.complainant_id === currentUser.id) ||
+            (relatedBlotter.complainant_name && relatedBlotter.complainant_name.toLowerCase() === currentUser.full_name.toLowerCase());
+          if (!isOwn) return false;
+        }
+      }
+      return true;
+    }
+
     if (n.target_role === currentUser.role) return true;
     if (currentUser.role === 'admin' || currentUser.role === 'captain' || currentUser.role === 'kagawad') {
       return n.target_role === 'staff' || n.target_role === 'admin' || n.target_role === 'all';
