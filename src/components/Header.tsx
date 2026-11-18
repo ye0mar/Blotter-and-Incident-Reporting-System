@@ -101,14 +101,19 @@ export const Header: React.FC = () => {
   const notifRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
 
-  // Role-based notifications filtering ensuring residents ONLY see their own complaint notifications
+  // Role-based notifications filtering ensuring users ONLY see their own targeted notifications or role notifications
   const userNotifications = notifications.filter(n => {
     if (!currentUser) return false;
+
+    // If notification is specifically targeted to a user_id, ONLY that user should receive it
+    if (n.user_id !== undefined && n.user_id !== null) {
+      return n.user_id === currentUser.id;
+    }
+
     if (n.target_role === 'all') return true;
 
     if (currentUser.role === 'resident') {
-      if (n.target_role !== 'resident') return false;
-      if (n.user_id && n.user_id !== currentUser.id) return false;
+      if (n.target_role && n.target_role !== 'resident') return false;
       if (n.blotter_id) {
         const relatedBlotter = blotters.find(b => b.blotter_id === n.blotter_id);
         if (relatedBlotter) {

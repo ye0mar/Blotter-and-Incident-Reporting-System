@@ -120,4 +120,7 @@ export interface IssueReport {
   screenshot?: string;
   screenshot_name?: string;
   created_at: string;
+  status?: 'pending' | 'resolved';
+  resolution_note?: string;
+  resolved_at?: string;
 }

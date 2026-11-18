@@ -97,12 +97,15 @@ export const AdminPortal: React.FC = () => {
     clearDatabaseData,
     activityLogs,
     issueReports,
-    resetUserPassword
+    resetUserPassword,
+    resolveIssueReport
   } = useApp();
 
   // Search in User Accounts
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [resolvingReportId, setResolvingReportId] = useState<number | null>(null);
+  const [resolutionNoteText, setResolutionNoteText] = useState('');
   
   // Add User modal state
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
@@ -1261,13 +1264,15 @@ export const AdminPortal: React.FC = () => {
                   <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Feature Name</th>
                   <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Description</th>
                   <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider text-center" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Screenshot</th>
+                  <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider text-center" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Status</th>
                   <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Submitted At</th>
+                  <th className="py-4 px-6 font-semibold text-[#64748B] text-xs uppercase tracking-wider text-right" style={{ fontFamily: "'Quicksand', 'Varela Round', sans-serif" }}>Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F1F5F9]">
                 {issueReports.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-12 text-center text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    <td colSpan={8} className="py-12 text-center text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>
                       No issue reports submitted.
                     </td>
                   </tr>
@@ -1280,7 +1285,14 @@ export const AdminPortal: React.FC = () => {
                         <div className="text-xs text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.user_email}</div>
                       </td>
                       <td className="py-4 px-6 font-medium text-[#1E293B] whitespace-nowrap" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.feature_name}</td>
-                      <td className="py-4 px-6 text-[#334155] max-w-md" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.description}</td>
+                      <td className="py-4 px-6 text-[#334155] max-w-md" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                        <div>{rep.description}</div>
+                        {rep.resolution_note && (
+                          <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs font-medium">
+                            <strong>Admin Resolution Note:</strong> {rep.resolution_note}
+                          </div>
+                        )}
+                      </td>
                       <td className="py-4 px-6 text-center whitespace-nowrap">
                         {rep.screenshot ? (
                           <div className="flex items-center justify-center gap-2">
@@ -1305,12 +1317,94 @@ export const AdminPortal: React.FC = () => {
                           <span className="text-[#94A3B8] text-xs italic" style={{ fontFamily: "'Poppins', sans-serif" }}>No screenshot</span>
                         )}
                       </td>
+                      <td className="py-4 px-6 text-center whitespace-nowrap">
+                        {rep.status === 'resolved' ? (
+                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                            Resolved
+                          </span>
+                        ) : (
+                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                            Pending
+                          </span>
+                        )}
+                      </td>
                       <td className="py-4 px-6 text-[#64748B] whitespace-nowrap text-xs" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.created_at}</td>
+                      <td className="py-4 px-6 text-right whitespace-nowrap">
+                        {rep.status === 'resolved' ? (
+                          <span className="text-xs text-emerald-700 font-semibold">Done</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setResolvingReportId(rep.id);
+                              setResolutionNoteText('Issue has been resolved and verified by Admin.');
+                            }}
+                            className="px-3 py-1.5 bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs rounded-full cursor-pointer transition-colors"
+                          >
+                            Resolve &amp; Note
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Resolve Issue Report */}
+      {resolvingReportId !== null && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-[24px] max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <button 
+              onClick={() => setResolvingReportId(null)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 rounded-full p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-[#1E293B]" style={{ fontFamily: "'Fredoka', sans-serif" }}>Resolve Issue Report</h3>
+              <p className="text-xs text-[#64748B]" style={{ fontFamily: "'Poppins', sans-serif" }}>Add a resolution note for the reporting user. This will notify them immediately.</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#1E293B] mb-1">Resolution Note / Remarks *</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={resolutionNoteText}
+                  onChange={e => setResolutionNoteText(e.target.value)}
+                  placeholder="e.g., Bug has been fixed in the latest deployment. Thank you for reporting!"
+                  className="w-full p-3 text-xs sm:text-sm border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#6366F1]"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setResolvingReportId(null)}
+                  className="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 text-xs sm:text-sm font-semibold rounded-full hover:bg-slate-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!resolutionNoteText.trim()) return;
+                    resolveIssueReport(resolvingReportId, resolutionNoteText.trim());
+                    setResolvingReportId(null);
+                    setResolutionNoteText('');
+                  }}
+                  className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded-full shadow-xs transition-colors cursor-pointer"
+                >
+                  Confirm &amp; Notify User
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

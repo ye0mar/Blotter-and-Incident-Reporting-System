@@ -29,6 +29,7 @@ interface AppContextType {
   markNotificationRead: (id: number) => void;
   clearAllNotifications: () => void;
   reportIssue: (data: { feature_name: string; description: string; screenshot?: string; screenshot_name?: string }) => void;
+  resolveIssueReport: (id: number, resolutionNote: string) => void;
   resetUserPassword: (userId: number, newPassword?: string) => { success: boolean; message: string };
 
   // System Settings
@@ -357,6 +358,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       target_role: 'admin'
     };
     setNotifications(prev => [adminNotif, ...prev]);
+  };
+
+  const resolveIssueReport = (id: number, resolutionNote: string) => {
+    let targetReport: IssueReport | undefined;
+    setIssueReports(prev => prev.map(r => {
+      if (r.id === id) {
+        targetReport = r;
+        return {
+          ...r,
+          status: 'resolved',
+          resolution_note: resolutionNote,
+          resolved_at: new Date().toLocaleString()
+        };
+      }
+      return r;
+    }));
+
+    if (targetReport) {
+      logActivity('Issue Resolved', `Admin resolved issue report #${id} (${targetReport.feature_name})`);
+      const userNotif: AppNotification = {
+        id: Date.now(),
+        title: 'Issue Report Resolved',
+        message: `Your issue report for "${targetReport.feature_name}" has been resolved by Admin. Admin note: "${resolutionNote}"`,
+        timestamp: 'Just now',
+        read: false,
+        user_id: targetReport.user_id
+      };
+      setNotifications(prev => [userNotif, ...prev]);
+    }
   };
 
   const resetUserPassword = (userId: number, newPassword: string = 'password123') => {
@@ -800,6 +830,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         markNotificationRead,
         clearAllNotifications,
         reportIssue,
+        resolveIssueReport,
         resetUserPassword,
         systemSettings,
         updateSystemSettings,
