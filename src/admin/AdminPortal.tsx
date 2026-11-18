@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { UserRole } from '../types';
+import { UserRole, IssueReport } from '../types';
 import { exportCapstoneSystemAdminReport } from '../utils/reportExporter';
 import { 
   Settings, 
@@ -106,6 +106,7 @@ export const AdminPortal: React.FC = () => {
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [resolvingReportId, setResolvingReportId] = useState<number | null>(null);
   const [resolutionNoteText, setResolutionNoteText] = useState('');
+  const [viewingResolutionReport, setViewingResolutionReport] = useState<IssueReport | null>(null);
   
   // Add User modal state
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
@@ -1287,11 +1288,6 @@ export const AdminPortal: React.FC = () => {
                       <td className="py-4 px-6 font-medium text-[#1E293B] whitespace-nowrap" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.feature_name}</td>
                       <td className="py-4 px-6 text-[#334155] max-w-md" style={{ fontFamily: "'Poppins', sans-serif" }}>
                         <div>{rep.description}</div>
-                        {rep.resolution_note && (
-                          <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs font-medium">
-                            <strong>Admin Resolution Note:</strong> {rep.resolution_note}
-                          </div>
-                        )}
                       </td>
                       <td className="py-4 px-6 text-center whitespace-nowrap">
                         {rep.screenshot ? (
@@ -1331,7 +1327,15 @@ export const AdminPortal: React.FC = () => {
                       <td className="py-4 px-6 text-[#64748B] whitespace-nowrap text-xs" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.created_at}</td>
                       <td className="py-4 px-6 text-right whitespace-nowrap">
                         {rep.status === 'resolved' ? (
-                          <span className="text-xs text-emerald-700 font-semibold">Done</span>
+                          <button
+                            type="button"
+                            onClick={() => setViewingResolutionReport(rep)}
+                            className="px-3 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-semibold rounded-full cursor-pointer transition-colors inline-flex items-center gap-1 shadow-xs"
+                            title="Click to view Admin Resolution Note"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                            <span>Done (View Note)</span>
+                          </button>
                         ) : (
                           <button
                             type="button"
@@ -1624,6 +1628,50 @@ export const AdminPortal: React.FC = () => {
                 alt="Enlarged issue screenshot"
                 className="max-h-full max-w-full object-contain"
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: View Admin Resolution Note */}
+      {viewingResolutionReport && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4" onClick={() => setViewingResolutionReport(null)}>
+          <div className="bg-white rounded-[24px] max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-4 animate-in fade-in zoom-in-95 duration-150" onClick={e => e.stopPropagation()}>
+            <button 
+              onClick={() => setViewingResolutionReport(null)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 rounded-full p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="space-y-1">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-1">
+                Resolved Issue Report #{viewingResolutionReport.id}
+              </span>
+              <h3 className="text-xl font-bold text-[#1E293B]" style={{ fontFamily: "'Fredoka', sans-serif" }}>{viewingResolutionReport.feature_name}</h3>
+              <p className="text-xs text-[#64748B]">Reported by {viewingResolutionReport.user_name} on {viewingResolutionReport.created_at}</p>
+            </div>
+
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-2">
+              <div className="text-xs font-bold text-emerald-900 uppercase tracking-wide">Admin Resolution Note:</div>
+              <p className="text-xs sm:text-sm text-emerald-950 font-medium leading-relaxed">
+                {viewingResolutionReport.resolution_note || 'No resolution note provided.'}
+              </p>
+              {viewingResolutionReport.resolved_at && (
+                <div className="text-[11px] text-emerald-700 pt-1 border-t border-emerald-200/60">
+                  Resolved at: {viewingResolutionReport.resolved_at}
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setViewingResolutionReport(null)}
+                className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-full transition-colors cursor-pointer"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
