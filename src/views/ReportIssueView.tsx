@@ -230,12 +230,42 @@ export const ReportIssueView: React.FC = () => {
 
           <div className="space-y-3">
             {userReports.map(rep => (
-              <div key={rep.id} className="p-4 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl text-xs sm:text-sm space-y-2">
-                <div className="flex items-center justify-between gap-2">
+              <div key={rep.id} className="p-4 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl text-xs sm:text-sm space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="font-bold text-[#1E293B]" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.feature_name}</span>
-                  <span className="text-xs text-[#64748B] font-medium" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.created_at}</span>
+                  <div className="flex items-center gap-2">
+                    {rep.status === 'resolved' ? (
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+                        Resolved
+                      </span>
+                    ) : (
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
+                        Pending / Waiting
+                      </span>
+                    )}
+                    <span className="text-xs text-[#64748B] font-medium" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.created_at}</span>
+                  </div>
                 </div>
+
                 <p className="text-xs text-[#475569] leading-relaxed" style={{ fontFamily: "'Poppins', sans-serif" }}>{rep.description}</p>
+
+                {rep.resolution_note && (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
+                    <div className="text-[11px] font-bold text-emerald-900 uppercase tracking-wide flex items-center gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Admin Resolution Note:</span>
+                    </div>
+                    <p className="text-xs text-emerald-950 font-medium leading-relaxed">
+                      {rep.resolution_note}
+                    </p>
+                    {rep.resolved_at && (
+                      <div className="text-[10px] text-emerald-700 pt-1">
+                        Resolved at: {rep.resolved_at}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {rep.screenshot && (
                   <div className="pt-1">
                     <button
