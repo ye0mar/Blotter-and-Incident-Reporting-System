@@ -93,10 +93,10 @@ export const StaffPortal: React.FC = () => {
   const [otherType, setOtherType] = useState(savedStaffDraft?.otherType || '');
 
   // Step 2: Location, Date, Narrative, Actions
-  const [incLocation, setIncLocation] = useState(savedStaffDraft?.incLocation || 'Alley 11, Barangay Sta. Ana, Pateros');
+  const [incLocation, setIncLocation] = useState(savedStaffDraft?.incLocation || '');
   const [incDateTime, setIncDateTime] = useState(savedStaffDraft?.incDateTime || new Date().toISOString().slice(0, 16));
   const [incNarrative, setIncNarrative] = useState(savedStaffDraft?.incNarrative || '');
-  const [selectedBarangayActions, setSelectedBarangayActions] = useState<string[]>(savedStaffDraft?.selectedBarangayActions || ['Iskedyul ng Mediasyon']);
+  const [selectedBarangayActions, setSelectedBarangayActions] = useState<string[]>(savedStaffDraft?.selectedBarangayActions || []);
   const [otherAction, setOtherAction] = useState(savedStaffDraft?.otherAction || '');
 
   // Auto-Save Effect
@@ -288,7 +288,7 @@ export const StaffPortal: React.FC = () => {
     });
 
     setSubmitSuccessCaseId(created.blotter_id);
-    setReportStep(4);
+    setReportStep(3);
   };
 
   const handleCreateScheduleSubmit = (e: React.FormEvent) => {
@@ -429,6 +429,19 @@ export const StaffPortal: React.FC = () => {
               <button
                 onClick={() => {
                   setReportStep(1);
+                  setCompName('');
+                  setCompAddress('');
+                  setCompPhone('');
+                  setRespName('');
+                  setRespAddress('');
+                  setRespRelation('');
+                  setRespPhone('');
+                  setSelectedIncidentTypes([]);
+                  setOtherType('');
+                  setIncLocation('');
+                  setIncNarrative('');
+                  setSelectedBarangayActions([]);
+                  setOtherAction('');
                   setActiveTab('staff-create-report');
                 }}
                 className="bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all shadow-xs hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2"
@@ -699,10 +712,7 @@ export const StaffPortal: React.FC = () => {
                 <span>1. Nag-uulat at Nasasangkot</span>
               </div>
               <div className={`flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full ${reportStep === 2 ? 'bg-[#E0E7FF] text-[#3730A3]' : 'bg-slate-100 text-[#64748B]'}`}>
-                <span>2. Detalye at Aksyon</span>
-              </div>
-              <div className={`flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full ${reportStep === 3 ? 'bg-[#E0E7FF] text-[#3730A3]' : 'bg-slate-100 text-[#64748B]'}`}>
-                <span>3. Ebidensya at Kumpirmasyon</span>
+                <span>2. Detalye at Ebidensya</span>
               </div>
             </div>
 
@@ -734,7 +744,7 @@ export const StaffPortal: React.FC = () => {
                   <div className="text-xs uppercase font-bold tracking-wider text-[#6366F1] mb-3">COMPLAINANT (NAGREREKLAMO)</div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Buong Pangalan *</label>
+                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Buong Pangalan</label>
                       <input 
                         type="text" 
                         required 
@@ -745,7 +755,7 @@ export const StaffPortal: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Telepono #</label>
+                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Telepono</label>
                       <input 
                         type="text" 
                         placeholder="09123456789"
@@ -769,9 +779,9 @@ export const StaffPortal: React.FC = () => {
 
                 <div className="pt-2">
                   <div className="text-xs uppercase font-bold tracking-wider text-[#6366F1] mb-3">RESPONDENT (INIREREKLAMO)</div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Buong Pangalan *</label>
+                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Buong Pangalan</label>
                       <input 
                         type="text" 
                         required 
@@ -780,26 +790,7 @@ export const StaffPortal: React.FC = () => {
                         onChange={e => setRespName(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Telepono #</label>
-                      <input 
-                        type="text" 
-                        placeholder="09987654321"
-                        value={respPhone}
-                        onChange={e => setRespPhone(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-semibold text-[#1E293B] mb-1">Tirahan / Address</label>
-                      <input 
-                        type="text" 
-                        placeholder="Barangay Sta. Ana, Pateros"
-                        value={respAddress}
-                        onChange={e => setRespAddress(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
-                      />
+                      <p className="text-[11px] text-slate-500 mt-1">Isulat ang "N/A" kung hindi mo kilala ang pangalan ng inirereklamo</p>
                     </div>
                   </div>
                 </div>
@@ -828,117 +819,99 @@ export const StaffPortal: React.FC = () => {
                     className="px-6 py-2.5 bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs sm:text-sm rounded-full transition-all shadow-xs flex items-center gap-2 cursor-pointer"
                     style={{ fontFamily: "'Quicksand', sans-serif" }}
                   >
-                    <span>Next: Detalye ng Insidente</span>
+                    <span>Next: Detalye at Ebidensya</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* STEP 2: Incident Details */}
+            {/* STEP 2: Incident Details, Barangay Actions & Evidence */}
             {reportStep === 2 && (
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-xs font-semibold text-[#1E293B] mb-1">Eksaktong Lokasyon ng Insidente</label>
-                  <input 
-                    type="text" 
-                    placeholder="Alley 11, Barangay Sta. Ana, Pateros"
-                    value={incLocation}
-                    onChange={e => setIncLocation(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1E293B] mb-1">Petsa at Oras ng Pangyayari</label>
-                  <input 
-                    type="datetime-local" 
-                    value={incDateTime}
-                    onChange={e => setIncDateTime(e.target.value)}
-                    className="w-full max-w-xs px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1E293B] mb-1">Detalyadong Salaysay / Narrative</label>
-                  <textarea 
-                    rows={5}
-                    placeholder="Isulat ang kumpletong kwento at pahayag ng nag-uulat..."
-                    value={incNarrative}
-                    onChange={e => setIncNarrative(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <div className="text-xs uppercase font-bold tracking-wider text-[#6366F1] mb-3">AKSYONG ISINAGAWA NG BARANGAY</div>
-                  <div className="flex flex-wrap gap-3">
-                    {['Iskedyul ng Mediasyon', 'Inirefer sa Pulisya', 'Inirefer sa DSWD', 'Nagbigay ng Babala'].map(a => (
-                      <label key={a} className="inline-flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium">
-                        <input 
-                          type="checkbox"
-                          checked={selectedBarangayActions.includes(a)}
-                          onChange={() => toggleBarangayAction(a)}
-                          className="accent-[#6366F1]"
-                        />
-                        <span>{a}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 flex justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setReportStep(1)}
-                    className="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-full hover:bg-slate-50 transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setReportStep(3)}
-                    className="px-6 py-2.5 bg-[#E0E7FF] hover:bg-[#c7d2fe] text-[#3730A3] font-semibold text-xs sm:text-sm rounded-full transition-all shadow-xs flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>Next: Ebidensya &amp; Review</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3: Evidence & Confirm */}
-            {reportStep === 3 && (
               <div className="space-y-6">
-                <div>
-                  <label className="block text-xs font-semibold text-[#1E293B] mb-1">Ebidensya at Kalakip na Dokumento (Opsyonal)</label>
-                  <div className="border-2 border-dashed border-[#E2E8F0] rounded-2xl p-6 text-center bg-[#F8FAFC]">
-                    <Upload className="w-6 h-6 text-[#94A3B8] mx-auto mb-2" />
-                    <label className="inline-block px-4 py-2 bg-white border border-[#CBD5E1] text-[#334155] rounded-full text-xs font-semibold cursor-pointer hover:bg-slate-50">
-                      <span>Browse Files</span>
-                      <input 
-                        type="file" 
-                        multiple 
-                        onChange={e => e.target.files && handleAddEvidenceFiles(e.target.files)}
-                        className="hidden" 
-                      />
-                    </label>
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E293B] mb-1">Eksaktong Lokasyon ng Insidente</label>
+                    <input 
+                      type="text" 
+                      placeholder="Alley 11, Barangay Sta. Ana, Pateros"
+                      value={incLocation}
+                      onChange={e => setIncLocation(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
+                    />
                   </div>
-                </div>
 
-                {evidenceItems.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="text-xs font-semibold text-[#1E293B]">Attached Files ({evidenceItems.length}):</div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {evidenceItems.map(item => (
-                        <div key={item.id} className="p-3 bg-[#F8FAFC] border border-slate-200 rounded-xl flex items-center justify-between text-xs">
-                          <span className="truncate font-medium text-[#1E293B]">{item.name}</span>
-                          <span className="text-[10px] text-[#64748B]">{item.size}</span>
-                        </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E293B] mb-1">Petsa at Oras ng Pangyayari</label>
+                    <input 
+                      type="datetime-local" 
+                      value={incDateTime}
+                      onChange={e => setIncDateTime(e.target.value)}
+                      className="w-full max-w-xs px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E293B] mb-1">Detalyadong Salaysay / Narrative</label>
+                    <textarea 
+                      rows={5}
+                      placeholder="Isulat ang kumpletong kwento at pahayag ng nag-uulat..."
+                      value={incNarrative}
+                      onChange={e => setIncNarrative(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <div className="text-xs uppercase font-bold tracking-wider text-[#6366F1] mb-3">AKSYONG ISINAGAWA NG BARANGAY</div>
+                    <div className="flex flex-wrap gap-3">
+                      {['Iskedyul ng Mediasyon', 'Inirefer sa Pulisya', 'Inirefer sa DSWD', 'Nagbigay ng Babala'].map(a => (
+                        <label key={a} className="inline-flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium">
+                          <input 
+                            type="checkbox"
+                            checked={selectedBarangayActions.includes(a)}
+                            onChange={() => toggleBarangayAction(a)}
+                            className="accent-[#6366F1]"
+                          />
+                          <span>{a}</span>
+                        </label>
                       ))}
                     </div>
                   </div>
-                )}
+                </div>
+
+                {/* Evidence Upload Block */}
+                <div className="space-y-3 pt-4 border-t border-slate-100">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1E293B] mb-1">Ebidensya at Kalakip na Dokumento (Opsyonal)</label>
+                    <div className="border-2 border-dashed border-[#E2E8F0] rounded-2xl p-6 text-center bg-[#F8FAFC]">
+                      <Upload className="w-6 h-6 text-[#94A3B8] mx-auto mb-2" />
+                      <label className="inline-block px-4 py-2 bg-white border border-[#CBD5E1] text-[#334155] rounded-full text-xs font-semibold cursor-pointer hover:bg-slate-50">
+                        <span>Browse Files</span>
+                        <input 
+                          type="file" 
+                          multiple 
+                          onChange={e => e.target.files && handleAddEvidenceFiles(e.target.files)}
+                          className="hidden" 
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {evidenceItems.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-xs font-semibold text-[#1E293B]">Attached Files ({evidenceItems.length}):</div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {evidenceItems.map(item => (
+                          <div key={item.id} className="p-3 bg-[#F8FAFC] border border-slate-200 rounded-xl flex items-center justify-between text-xs">
+                            <span className="truncate font-medium text-[#1E293B]">{item.name}</span>
+                            <span className="text-[10px] text-[#64748B]">{item.size}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div className="p-4 bg-indigo-50/60 border border-indigo-100 rounded-2xl text-xs space-y-1 text-[#3730A3]">
                   <div className="font-bold">Summary Review:</div>
@@ -949,7 +922,7 @@ export const StaffPortal: React.FC = () => {
                 <div className="pt-4 flex justify-between items-center">
                   <button
                     type="button"
-                    onClick={() => setReportStep(2)}
+                    onClick={() => setReportStep(1)}
                     className="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-full hover:bg-slate-50 transition-colors"
                   >
                     Back

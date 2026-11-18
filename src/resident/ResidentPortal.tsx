@@ -48,8 +48,8 @@ export const ResidentPortal: React.FC = () => {
     }
   }, []);
 
-  // STEP WIZARD STATE
-  const [reportStep, setReportStep] = useState<1 | 2 | 3>(savedResidentDraft?.reportStep || 1);
+  // STEP WIZARD STATE (2 steps: 1 = Parties, 2 = Details & Evidence)
+  const [reportStep, setReportStep] = useState<1 | 2>(savedResidentDraft?.reportStep || 1);
 
   // Step 1: Letterhead & Parties
   const [reportDateTime, setReportDateTime] = useState<string>(() => {
@@ -69,18 +69,18 @@ export const ResidentPortal: React.FC = () => {
   const [complainantAddress, setComplainantAddress] = useState(savedResidentDraft?.complainantAddress || currentUser?.address || 'Alley 1 P Rosales St.');
   const [complainantRelation, setComplainantRelation] = useState(savedResidentDraft?.complainantRelation || 'Biktima');
 
-  const [respondentName, setRespondentName] = useState(savedResidentDraft?.respondentName ?? 'Jessie Santos');
-  const [respondentPhone, setRespondentPhone] = useState(savedResidentDraft?.respondentPhone ?? '093215129741');
-  const [respondentAddress, setRespondentAddress] = useState(savedResidentDraft?.respondentAddress ?? 'Blk 1 Lot 33 Alley 2');
+  const [respondentName, setRespondentName] = useState(savedResidentDraft?.respondentName ?? '');
+  const [respondentPhone, setRespondentPhone] = useState(savedResidentDraft?.respondentPhone ?? '');
+  const [respondentAddress, setRespondentAddress] = useState(savedResidentDraft?.respondentAddress ?? '');
 
-  const [selectedIncidentTypes, setSelectedIncidentTypes] = useState<string[]>(savedResidentDraft?.selectedIncidentTypes || ['Pisikal na Pananakit']);
+  const [selectedIncidentTypes, setSelectedIncidentTypes] = useState<string[]>(savedResidentDraft?.selectedIncidentTypes || ['Pagnanakaw']);
   const [otherIncidentType, setOtherIncidentType] = useState(savedResidentDraft?.otherIncidentType || '');
 
   // Step 2: Location, Date & Narrative
-  const [incidentLocation, setIncidentLocation] = useState(savedResidentDraft?.incidentLocation || 'Alley 1 P Rosales St.');
-  const [incidentDateTimeStr, setIncidentDateTimeStr] = useState(savedResidentDraft?.incidentDateTimeStr || 'May 2, 2026  2:00PM');
-  const [incidentDescription, setIncidentDescription] = useState(savedResidentDraft?.incidentDescription ?? 'Naganap ang mainitang pagtatalo at pisikal na pananakit sa labas ng tindahan.');
-  const [selectedActions, setSelectedActions] = useState<string[]>(savedResidentDraft?.selectedActions || ['Iskedyul ng Mediasyon']);
+  const [incidentLocation, setIncidentLocation] = useState(savedResidentDraft?.incidentLocation || '');
+  const [incidentDateTimeStr, setIncidentDateTimeStr] = useState(savedResidentDraft?.incidentDateTimeStr || new Date().toLocaleString());
+  const [incidentDescription, setIncidentDescription] = useState(savedResidentDraft?.incidentDescription ?? '');
+  const [selectedActions, setSelectedActions] = useState<string[]>(savedResidentDraft?.selectedActions || []);
   const [otherAction, setOtherAction] = useState(savedResidentDraft?.otherAction || '');
 
   // Auto-Save Effect across sessions / accidental refreshes
@@ -256,8 +256,9 @@ export const ResidentPortal: React.FC = () => {
     setRespondentPhone('');
     setRespondentAddress('');
     setIncidentDescription('');
-    setSelectedIncidentTypes(['Pisikal na Pananakit']);
-    setSelectedActions(['Iskedyul ng Mediasyon']);
+    setSelectedIncidentTypes([]);
+    setSelectedActions([]);
+    setIncidentLocation('');
     setActiveTab('resident-report');
   };
 
@@ -1033,40 +1034,13 @@ export const ResidentPortal: React.FC = () => {
         {activeTab === 'resident-report' && (
           <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 space-y-6">
             
-            {/* Step Bar (Matches .step-bar, .step-item, .step-circle, .step-line) */}
-            <div className="flex items-center justify-center pt-2 pb-4">
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-semibold ${
-                  reportStep > 1 
-                    ? 'bg-[#2563eb] border-[#2563eb] text-white' 
-                    : 'border-[#2563eb] text-[#2563eb] bg-white'
-                }`}>
-                  {reportStep > 1 ? <Check className="w-3.5 h-3.5" /> : '1'}
-                </div>
-                <div className={`w-16 h-0.5 ${reportStep > 1 ? 'bg-[#2563eb]' : 'bg-[#e2e8f0]'}`} />
+            {/* Step Bar */}
+            <div className="flex items-center justify-center gap-3 pt-1 pb-4">
+              <div className={`flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full ${reportStep === 1 ? 'bg-[#E0E7FF] text-[#3730A3]' : 'bg-slate-100 text-[#64748B]'}`}>
+                <span>1. Nag-uulat at Nasasangkot</span>
               </div>
-
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-semibold ${
-                  reportStep > 2 
-                    ? 'bg-[#2563eb] border-[#2563eb] text-white' 
-                    : reportStep === 2
-                      ? 'border-[#2563eb] text-[#2563eb] bg-white'
-                      : 'border-[#e2e8f0] text-[#64748b] bg-white'
-                }`}>
-                  {reportStep > 2 ? <Check className="w-3.5 h-3.5" /> : '2'}
-                </div>
-                <div className={`w-16 h-0.5 ${reportStep > 2 ? 'bg-[#2563eb]' : 'bg-[#e2e8f0]'}`} />
-              </div>
-
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-semibold ${
-                  reportStep === 3 
-                    ? 'border-[#2563eb] text-[#2563eb] bg-white' 
-                    : 'border-[#e2e8f0] text-[#64748b] bg-white'
-                }`}>
-                  3
-                </div>
+              <div className={`flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full ${reportStep === 2 ? 'bg-[#E0E7FF] text-[#3730A3]' : 'bg-slate-100 text-[#64748B]'}`}>
+                <span>2. Detalye at Ebidensya</span>
               </div>
             </div>
 
@@ -1180,9 +1154,9 @@ export const ResidentPortal: React.FC = () => {
                     <div className="font-bold text-xs sm:text-sm text-[#1e293b] border-b border-[#e2e8f0] pb-1.5 mb-3.5 tracking-wide">
                       INAANGKIN NA NASASANGKOT (RESPONDENT)
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-[#334155] mb-1">Pangalan</label>
+                        <label className="block text-xs font-semibold text-[#334155] mb-1">Buong Pangalan</label>
                         <input 
                           type="text" 
                           placeholder="Buong Pangalan"
@@ -1190,26 +1164,7 @@ export const ResidentPortal: React.FC = () => {
                           onChange={e => setRespondentName(e.target.value)}
                           className="w-full px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
                         />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-[#334155] mb-1">Telepono</label>
-                        <input 
-                          type="tel" 
-                          placeholder="Numero ng cellphone o landline"
-                          value={respondentPhone}
-                          onChange={e => setRespondentPhone(e.target.value)}
-                          className="w-full px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
-                        />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs font-semibold text-[#334155] mb-1">Tirahan</label>
-                        <input 
-                          type="text" 
-                          placeholder="Kumpletong address"
-                          value={respondentAddress}
-                          onChange={e => setRespondentAddress(e.target.value)}
-                          className="w-full px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
-                        />
+                        <p className="text-[11px] text-slate-500 mt-1">Isulat ang "N/A" kung hindi mo kilala ang pangalan ng inirereklamo</p>
                       </div>
                     </div>
                   </div>
@@ -1276,78 +1231,52 @@ export const ResidentPortal: React.FC = () => {
                 </div>
               )}
 
-              {/* STEP 2: Location, Date & Narrative */}
+              {/* STEP 2: Location, Date, Narrative & Evidence */}
               {reportStep === 2 && (
-                <div className="space-y-5">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#334155] mb-1">
-                      Lugar ng Pangyayari:
-                    </label>
-                    <input 
-                      type="text"
-                      placeholder="Ilagay kung saan ng yari ang insidente o eksaktong lugar"
-                      value={incidentLocation}
-                      onChange={e => setIncidentLocation(e.target.value)}
-                      className="w-full px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-[#334155] mb-1">
-                      Petsa at oras ng pangyayari:
-                    </label>
-                    <input 
-                      type="text"
-                      placeholder="Ilagay ang etsa at oras ng pangyayari"
-                      value={incidentDateTimeStr}
-                      onChange={e => setIncidentDateTimeStr(e.target.value)}
-                      className="w-full max-w-md px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-[#334155] mb-1">
-                      Detalye ng Insidente:
-                    </label>
-                    <textarea 
-                      placeholder="Ikwento nang buo ang nangyari"
-                      rows={5}
-                      value={incidentDescription}
-                      onChange={e => setIncidentDescription(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb] resize-y leading-relaxed"
-                    />
-                  </div>
-
-
-
-                  {/* Step 2 Actions */}
-                  <div className="flex justify-between items-center pt-4 border-t border-[#e2e8f0]">
-                    <button
-                      type="button"
-                      onClick={() => setReportStep(1)}
-                      className="bg-white hover:bg-[#F8FAFC] text-[#64748B] border border-[#E2E8F0] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                      <span>Prev</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setReportStep(3)}
-                      className="bg-[#CAE1F7] hover:bg-[#B3D7F5] text-[#1E3A8A] px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors shadow-xs"
-                    >
-                      <span>Next</span>
-                      <ArrowRight className="w-4 h-4 text-[#1E3A8A]" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3: Evidence & Final Actions */}
-              {reportStep === 3 && (
                 <div className="space-y-6" onPaste={handleEvidencePaste}>
-                  
-                  {/* Evidence Upload Block (Matching image_76db0ca8.png) */}
-                  <div className="space-y-3">
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#334155] mb-1">
+                        Lugar ng Pangyayari:
+                      </label>
+                      <input 
+                        type="text"
+                        placeholder="Ilagay kung saan ng yari ang insidente o eksaktong lugar"
+                        value={incidentLocation}
+                        onChange={e => setIncidentLocation(e.target.value)}
+                        className="w-full px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#334155] mb-1">
+                        Petsa at oras ng pangyayari:
+                      </label>
+                      <input 
+                        type="text"
+                        placeholder="Ilagay ang etsa at oras ng pangyayari"
+                        value={incidentDateTimeStr}
+                        onChange={e => setIncidentDateTimeStr(e.target.value)}
+                        className="w-full max-w-md px-3 py-2 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#334155] mb-1">
+                        Detalye ng Insidente:
+                      </label>
+                      <textarea 
+                        placeholder="Ikwento nang buo ang nangyari"
+                        rows={5}
+                        value={incidentDescription}
+                        onChange={e => setIncidentDescription(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-md border border-[#cbd5e1] text-xs sm:text-sm outline-none focus:border-[#2563eb] resize-y leading-relaxed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Evidence Upload Block */}
+                  <div className="space-y-3 pt-2 border-t border-[#e2e8f0]">
                     <div>
                       <label className="block text-[13px] font-semibold text-slate-800 mb-0.5">
                         Mga Kalakip na Dokumento/Ebidensya (Opsyonal)
@@ -1452,12 +1381,12 @@ export const ResidentPortal: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Step 3 Form Actions */}
+                  {/* Step 2 Form Actions */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-[#e2e8f0]">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setReportStep(2)}
+                        onClick={() => setReportStep(1)}
                         className="bg-white hover:bg-[#F8FAFC] text-[#64748B] border border-[#E2E8F0] px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors"
                       >
                         <ArrowLeft className="w-4 h-4" />
@@ -1503,7 +1432,6 @@ export const ResidentPortal: React.FC = () => {
                       </button>
                     </div>
                   </div>
-
                 </div>
               )}
 
